@@ -1,22 +1,15 @@
-# Resume-Rewriter
+# 🤖 AI Resume Parser
 
-Overview
-A modern web application built with Next.js, TypeScript, and Tailwind CSS. Clean architecture, component-driven UI, and production-ready structure.
+An intelligent resume parsing system that uses Natural Language Processing (NLP) to extract and analyze candidate information from resumes.
 
-Features
-- Responsive UI
-- TypeScript for strong typing
-- Modular React components
-- Clear project structure
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![NLP](https://img.shields.io/badge/NLP-Natural%20Language%20Processing-orange)
+![Machine Learning](https://img.shields.io/badge/Machine-Learning-blueviolet)
 
-Tech Stack
-Next.js · TypeScript · Tailwind CSS · Git
+## ✨ Features
 
-Setup
-git clone https://github.com/unnita1235/Resume-Rewriter.git
-cd Resume-Rewriter
-npm install
-npm run dev
-
-Author
-Developed by Unni T A — Full-Stack Developer
+- **Text Extraction**: Extract text from PDF, DOCX, and image formats
+- **Entity Recognition**: Identify name, email, phone, education, experience
+- **Skill Matching**: Automatically detect technical skills and competencies
+- **Experience Analysis**: Calculate total experience and role seniority
+- **JSON Output**: Structured data output for easy integration
