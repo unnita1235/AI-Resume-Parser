@@ -13,3 +13,21 @@ An intelligent resume parsing system that uses Natural Language Processing (NLP)
 - **Skill Matching**: Automatically detect technical skills and competencies
 - **Experience Analysis**: Calculate total experience and role seniority
 - **JSON Output**: Structured data output for easy integration
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.8+
+- pip package manager
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/unnita1235/ai-resume-parser.git
+cd ai-resume-parser
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python app.py
