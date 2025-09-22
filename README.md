@@ -31,3 +31,55 @@ pip install -r requirements.txt
 
 # Run the application
 python app.py
+
+from resume_parser import ResumeParser
+
+# Initialize parser
+parser = ResumeParser()
+
+# Parse a resume
+result = parser.parse('resume.pdf')
+print(result)
+📁 Project Structure
+text
+ai-resume-parser/
+├── src/
+│   ├── text_extraction.py    # Text extraction from various formats
+│   ├── entity_recognition.py # Identify key entities
+│   └── skill_matcher.py      # Skill detection and matching
+├── samples/                  # Sample resumes for testing
+├── requirements.txt          # Python dependencies
+└── app.py                   # Main application file
+🛠️ Technologies Used
+spaCy: For NLP and entity recognition
+
+PyPDF2: PDF text extraction
+
+python-docx: DOCX file processing
+
+scikit-learn: Machine learning components
+
+📊 Sample Output
+json
+{
+  "personal_info": {
+    "name": "John Doe",
+    "email": "john.doe@email.com",
+    "phone": "+1-234-567-8900"
+  },
+  "skills": ["Python", "Machine Learning", "React", "Node.js"],
+  "experience": [
+    {
+      "title": "Software Engineer",
+      "company": "Tech Corp",
+      "duration": "2 years"
+    }
+  ]
+}
+🤝 Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+📄 License
+This project is licensed under the MIT License.
+
+⭐ If you find this project helpful, please give it a star!
