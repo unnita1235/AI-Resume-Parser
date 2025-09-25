@@ -1,14 +1,20 @@
-# 🤖 AI Resume Parser - Production Ready NLP System
+# AI Resume Parser
 
-**Live Demo Available | Recruiter-Friendly Setup**
+A Python-based system that automatically extracts information from resumes using Natural Language Processing (NLP).
 
-## 🎯 Business Value
-Automates resume screening process, reducing HR workload by 70% and improving candidate matching accuracy.
+## Features
 
-## 🚀 Quick Demo (For Recruiters)
+- Extract text from PDF and DOCX files
+- Identify name, email, phone number, skills, and experience
+- Output structured JSON data
+- Support for multiple resume formats
+
+## Installation
+
 ```bash
-# 1-Click Setup for Evaluation
+# Clone the repository
 git clone https://github.com/unnita1235/ai-resume-parser.git
 cd ai-resume-parser
+
+# Install requirements
 pip install -r requirements.txt
-python sample_demo.py
