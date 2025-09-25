@@ -18,3 +18,38 @@ cd ai-resume-parser
 
 # Install requirements
 pip install -r requirements.txt
+Usage
+python
+from resume_parser import ResumeParser
+
+# Initialize parser
+parser = ResumeParser()
+
+# Parse a resume file
+result = parser.parse('resume.pdf')
+
+# Print extracted information
+print("Name:", result['name'])
+print("Email:", result['email'])
+print("Skills:", result['skills'])
+Project Structure
+text
+ai-resume-parser/
+├── src/           # Source code
+├── tests/         # Test cases
+├── samples/       # Example resumes
+├── requirements.txt
+└── README.md
+Technologies Used
+Python
+
+spaCy (for NLP)
+
+PyPDF2 (for PDF processing)
+
+python-docx (for DOCX files)
+
+Support
+For questions, email: Unnita1235@gmail.com
+
+
