@@ -1,55 +1,32 @@
-# AI Resume Parser
+# 🤖 AI Resume Parser
 
-A Python-based system that automatically extracts information from resumes using Natural Language Processing (NLP).
+An intelligent Natural Language Processing (NLP) system that automatically extracts and analyzes information from resumes.
 
-## Features
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![NLP](https://img.shields.io/badge/NLP-Natural%20Language%20Processing-orange)
+![Machine Learning](https://img.shields.io/badge/Machine%20Learning-FF6F00?style=for-the-badge)
 
-- Extract text from PDF and DOCX files
-- Identify name, email, phone number, skills, and experience
-- Output structured JSON data
-- Support for multiple resume formats
+## ✨ Features
 
-## Installation
+- **Multi-format Support**: Process PDF, DOCX, and image resumes
+- **Entity Recognition**: Extract name, email, education, experience
+- **Skill Extraction**: Identify technical skills automatically
+- **Experience Analysis**: Calculate total work experience
+- **JSON Output**: Structured data for easy integration
+
+## 🚀 Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/unnita1235/ai-resume-parser.git
 cd ai-resume-parser
-
-# Install requirements
 pip install -r requirements.txt
-Usage
-python
-from resume_parser import ResumeParser
+python app.py
+🛠️ Technologies
+Python, spaCy, PyPDF2, scikit-learn
 
-# Initialize parser
-parser = ResumeParser()
+NLP for text processing
 
-# Parse a resume file
-result = parser.parse('resume.pdf')
+Machine learning algorithms
 
-# Print extracted information
-print("Name:", result['name'])
-print("Email:", result['email'])
-print("Skills:", result['skills'])
-Project Structure
-text
-ai-resume-parser/
-├── src/           # Source code
-├── tests/         # Test cases
-├── samples/       # Example resumes
-├── requirements.txt
-└── README.md
-Technologies Used
-Python
-
-spaCy (for NLP)
-
-PyPDF2 (for PDF processing)
-
-python-docx (for DOCX files)
-
-Support
-For questions, email: Unnita1235@gmail.com
-
-
+📞 Contact
+Unni T A | Unnita1235@gmail.com | Ernakulam, Kerala
