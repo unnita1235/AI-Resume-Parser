@@ -45,19 +45,34 @@ const prompt = ai.definePrompt({
   output: {schema: OptimizeForAtsOutputSchema},
   prompt: `You are an expert resume optimization consultant specializing in Applicant Tracking Systems (ATS).
 
-You will analyze the resume and provide recommendations to improve its ATS compatibility score.
+Your task is to analyze the provided resume and provide comprehensive recommendations to improve its ATS compatibility score.
 
-Analyze the resume content and identify missing keywords that are relevant to the job description (if provided) and the resume content.
+ANALYSIS CRITERIA:
+1. Keyword density and relevance
+2. Formatting and structure
+3. Skills and experience alignment
+4. Industry-specific terminology
+5. Action verbs and quantifiable achievements
 
-Provide a compatibility score between 0 and 100.
+SCORING GUIDELINES:
+- 90-100: Excellent ATS compatibility
+- 80-89: Good ATS compatibility with minor improvements needed
+- 70-79: Fair ATS compatibility with several improvements needed
+- 60-69: Poor ATS compatibility requiring significant improvements
+- Below 60: Very poor ATS compatibility requiring major overhaul
 
-Resume:
+Resume Content:
 {{{resumeText}}}
 
 Job Description (Optional):
 {{{jobDescription}}}
 
-Recommendations:`,
+Please provide:
+1. ATS compatibility score (0-100)
+2. List of missing keywords from the job description
+3. Specific recommendations for improvement
+
+Focus on actionable, specific advice that will improve the resume's chances of passing ATS screening.`,
 });
 
 const optimizeForAtsFlow = ai.defineFlow(

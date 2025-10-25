@@ -36,7 +36,9 @@ export function parseResume(text: string): ParsedResume {
     // Check for section headers (e.g., [EXPERIENCE])
     if (trimmedLine.startsWith('[') && trimmedLine.endsWith(']')) {
       if (currentSection) {
-        if(currentEntry) currentSection.entries.push(currentEntry);
+        if(currentEntry) {
+          currentSection.entries.push(currentEntry);
+        }
         sections.push(currentSection);
       }
       currentSection = {
@@ -56,7 +58,7 @@ export function parseResume(text: string): ParsedResume {
       currentEntry.details.push(trimmedLine.substring(2).trim());
     } else {
       // It's a new entry (job title, school, etc.)
-      if (currentEntry && currentSection) {
+      if (currentEntry) {
         currentSection.entries.push(currentEntry);
       }
       
@@ -69,26 +71,26 @@ export function parseResume(text: string): ParsedResume {
         date,
         details: []
       };
-
-      // Check if next line is a subtitle (indented or italicized pattern can be complex, simple check for now)
-      // This simple parser assumes the next line after a title line might be a subtitle.
     }
   });
 
+  // Add the last section and entry
   if (currentSection) {
-    if(currentEntry) currentSection.entries.push(currentEntry);
+    if(currentEntry) {
+      (currentSection as ResumeSection).entries.push(currentEntry);
+    }
     sections.push(currentSection);
   }
 
   // A special pass for EXPERIENCE and EDUCATION to find subtitles
   sections.forEach(section => {
     if (section.title.toUpperCase() === 'EXPERIENCE' || section.title.toUpperCase() === 'EDUCATION') {
-      let tempEntries: ResumeEntry[] = [];
+      const tempEntries: ResumeEntry[] = [];
       let i = 0;
       while(i < section.entries.length) {
-        let entry = section.entries[i];
+        const entry = section.entries[i];
         if (i + 1 < section.entries.length) {
-            let nextEntry = section.entries[i+1];
+            const nextEntry = section.entries[i+1];
             if(!nextEntry.date && nextEntry.details.length === 0) {
                 entry.subtitle = nextEntry.title;
                 i++; // consume next entry as subtitle
@@ -100,7 +102,6 @@ export function parseResume(text: string): ParsedResume {
       section.entries = tempEntries;
     }
   });
-
 
   return { name, contact, sections };
 }

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { runAdjustTone, runEnhanceActionVerbs, runOptimizeForAts } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { Wand2, Loader2, Lightbulb, ClipboardCopy } from "lucide-react";
+import { Wand2, Loader2, Lightbulb, ClipboardCopy, Upload } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -14,6 +14,7 @@ import { Label } from "./ui/label";
 import { Progress } from "./ui/progress";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Textarea } from "./ui/textarea";
+import { FileUpload } from "./file-upload";
 import type { OptimizeForAtsOutput } from "@/ai/flows/optimize-for-ats";
 
 interface ResumeEditorProps {
@@ -97,15 +98,35 @@ export function ResumeEditor({ resumeText, setResumeText }: ResumeEditorProps) {
 
   return (
     <div className="p-4 space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="resume-input" className="text-lg font-semibold">Your Resume</Label>
-        <Textarea
-          id="resume-input"
-          value={resumeText}
-          onChange={(e) => setResumeText(e.target.value)}
-          placeholder="Paste your resume here..."
-          className="h-[400px] text-base"
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="resume-input" className="text-lg font-semibold">Your Resume</Label>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Upload className="h-4 w-4" />
+            <span>Upload or paste your resume</span>
+          </div>
+        </div>
+        
+        <FileUpload 
+          onFileProcessed={(text) => setResumeText(text)}
+          disabled={isAtsLoading || isToneLoading || isVerbLoading}
         />
+        
+        <div className="relative">
+          <Textarea
+            id="resume-input"
+            value={resumeText}
+            onChange={(e) => setResumeText(e.target.value)}
+            placeholder="Or paste your resume text here..."
+            className="h-[400px] text-base"
+            disabled={isAtsLoading || isToneLoading || isVerbLoading}
+          />
+          {resumeText && (
+            <div className="absolute top-2 right-2 text-xs text-muted-foreground bg-background px-2 py-1 rounded">
+              {resumeText.length} characters
+            </div>
+          )}
+        </div>
       </div>
 
       <Card>

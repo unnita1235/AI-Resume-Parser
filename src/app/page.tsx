@@ -14,9 +14,13 @@ import { DEFAULT_RESUME } from "@/lib/constants";
 export default function Home() {
   const [resumeText, setResumeText] = useState<string>(DEFAULT_RESUME);
 
+  const handleReset = () => {
+    setResumeText(DEFAULT_RESUME);
+  };
+
   return (
     <div className="flex flex-col h-screen bg-background font-body">
-      <Header />
+      <Header resumeText={resumeText} onReset={handleReset} />
       <main className="flex-grow">
         <ResizablePanelGroup direction="horizontal" className="h-full">
           <ResizablePanel defaultSize={50} minSize={30} className="h-full overflow-y-auto no-print">
