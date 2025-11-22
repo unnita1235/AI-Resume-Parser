@@ -73,6 +73,20 @@ Experience the live, hosted version deployed on **Vercel**.
 | Version Control | Git + GitHub |
 
 ---
+## 📡 Backend API Endpoints
+
+### Node.js Express Backend (Port 5000)
+
+| Method | Endpoint | Description | Request Body | Response |
+|--------|----------|-------------|--------------|----------|
+| `POST` | `/api/parse` | Upload and parse resume | `FormData` with `file` | Parsed resume data |
+| `GET` | `/api/resumes` | Get all parsed resumes | None | Array of resumes |
+| `GET` | `/api/resumes/:id` | Get single resume by ID | None | Single resume object |
+| `GET` | `/health` | Health check endpoint | None | Server status |
+
+#### Example: Upload Resume
+
+
 
 ## ⚙️ Getting Started (Local Development)
 
