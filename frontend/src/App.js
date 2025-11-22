@@ -1,23 +1,26 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import FileUpload from './components/FileUpload';
+import ResumeDisplay from './components/ResumeDisplay';
 import './App.css';
 
 function App() {
+  const [resumeData, setResumeData] = useState(null);
+
+  const handleUploadSuccess = (data) => {
+    setResumeData(data);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header>
+        <h1>AI Resume Parser</h1>
+        <p>Upload your resume to extract structured data</p>
       </header>
+      
+      <main>
+        <FileUpload onUploadSuccess={handleUploadSuccess} />
+        <ResumeDisplay resumeData={resumeData} />
+      </main>
     </div>
   );
 }

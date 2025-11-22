@@ -1,0 +1,31 @@
+Merge branch 'main' of https://github.com/unnita1235/AI-Resume-Parser
+
+# By Unni T A (20) and others
+# Via Unni T A
+* 'main' of https://github.com/unnita1235/AI-Resume-Parser: (24 commits)
+  feat: Complete AI Resume Parser implementation with enhanced features - File upload support (PDF, DOCX, TXT) with drag-and-drop - Enhanced AI flows with better prompts and error handling - Copy to clipboard and reset functionality - Fixed all TypeScript errors - Production ready with comprehensive documentation
+  Add files via upload
+  Add placeholder text to placeholder.txt
+  Update README.md
+  Create placeholder.txt
+  Update README.md
+  Update README.md
+  Create app.py
+  Create requirements.txt
+  Update README.md
+  Update README.md
+  Update README.md
+  Update README.md
+  Create architecture.md
+  Create test_files_exist.py
+  Create .env.example
+  Create Dockerfile
+  Create python-ci.yml
+  Update README.md
+  Update README.md
+  ...
+# Please enter a commit message to explain why this merge is necessary,
+# especially if it merges an updated upstream into a topic branch.
+#
+# Lines starting with '#' will be ignored, and an empty message aborts
+# the commit.
