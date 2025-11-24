@@ -1,5 +1,11 @@
 # AI Resume Parser & Rewriter
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ai-resume-parser-seven.vercel.app/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-15-blue)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-84%25-blue)](https://www.typescriptlang.org/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-3.4-06B6D4)](https://tailwindcss.com/)
 
+ 
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ai-resume-parser-seven.vercel.app/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-15-blue)](https://nextjs.org)
