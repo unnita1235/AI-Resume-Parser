@@ -69,5 +69,7 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+    npm install --save helmet express-rate-limit csurf @sentry/nextjs mongoose bcryptjs jsonwebtoken
+npm install --save-dev jest @testing-library/react @testing-library/jest-dom
   }
 }
