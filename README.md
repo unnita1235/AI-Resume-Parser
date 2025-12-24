@@ -13,7 +13,7 @@
 AI Resume Parser & Rewriter is a production-ready web application designed to help job seekers optimize their resumes for modern hiring processes. Using advanced AI technology, it analyzes resume content and provides intelligent enhancements that improve ATS compatibility, professional tone, and overall impact.
 
 **Live Demo:** https://ai-resume-parser-seven.vercel.app/  
-**Backend API:** https://ai-resume-parser-api.onrender.com  
+**Backend API:** https://ai-resume-parser-0cmr.onrender.com  
 **GitHub:** https://github.com/unnita1235/AI-Resume-Parser
 
 ---
