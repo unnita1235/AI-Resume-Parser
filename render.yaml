@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: ai-resume-parser-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+    healthCheckPath: /health
+    healthCheckInterval: 30
+    healthCheckTimeout: 5
+    region: oregon
+    plan: free
+    envVarGroups:
+      - id: backend-env
+        vars:
+          - key: MONGODB_URI
+            sync: false
+          - key: CORS_ORIGINS
+            value: https://yourdomain.com
+          - key: MAX_FILE_SIZE
+            value: 10485760
+          - key: UPLOAD_PATH
+            value: ./uploads
+
+databases:
+  - name: mongodb-atlas
+    plan: free
+    ipAllowList: []
+
+# Note: MongoDB Atlas is external service, configure separately at mongodb.com/cloud/atlas
+# The MONGODB_URI environment variable should point to your MongoDB Atlas cluster
+# Keep this on the free tier for cost-effective operations
