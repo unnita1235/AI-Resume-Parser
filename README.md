@@ -1,523 +1,260 @@
 # AI Resume Parser & Rewriter
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ai-resume-parser-seven.vercel.app/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Next.js](https://img.shields.io/badge/Next.js-15-blue)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-84%25-blue)](https://www.typescriptlang.org/)
-[![Tailwind](https://img.shields.io/badge/Tailwind-3.4-06B6D4)](https://tailwindcss.com/)
+> AI-powered resume enhancement tool with real-time text optimization using Google Gemini AI.
 
-> An intelligent web application that analyzes resumes using AI and automatically enhances them for ATS (Applicant Tracking System) optimization, professional tone, and stronger action verbs.
-
-## 🎯 Overview
-
-AI Resume Parser & Rewriter is a production-ready web application designed to help job seekers optimize their resumes for modern hiring processes. Using advanced AI technology, it analyzes resume content and provides intelligent enhancements that improve ATS compatibility, professional tone, and overall impact.
-
-**Live Demo:** https://ai-resume-parser-seven.vercel.app/  
-**Backend API:** https://ai-resume-parser-0cmr.onrender.com  
-**GitHub:** https://github.com/unnita1235/AI-Resume-Parser
+**Status**: ✅ **PRODUCTION READY** - Fully Functional  
+**Live Demo**: https://ai-resume-parser-seven.vercel.app
 
 ---
 
-## 📸 Screenshots
+## 📸 What This Is
 
-### Resume Rewriter Interface
-![Resume Rewriter Interface](public/screenshots/AI-Resume-Parser.png)
+AI Resume Parser is a **fully functional web application** that uses Google Gemini AI to enhance resumes in real-time. It provides ATS optimization, professional tone adjustment, and action verb improvements.
 
-### AI Enhancement Tools Panel
-![AI Enhancement Tools](public/screenshots/AI-Resume-Parser1.png)
+**This project actually works!** Unlike prototypes, this is a complete, deployed application with real AI integration and active users.
 
 ---
 
-## ✨ Key Features
+## ✨ Features (All Working ✅)
 
-### 🎯 Core Functionality
+### What Actually Works
+- ✅ **AI Resume Enhancement** - Google Gemini 2.5 Flash integration
+- ✅ **File Upload** - PDF, DOCX, TXT support
+- ✅ **Real-time Editing** - Live text input and preview
+- ✅ **ATS Optimization** - Improve resume for applicant tracking systems
+- ✅ **Tone Adjustment** - Professional writing enhancement
+- ✅ **Action Verbs** - Strengthen resume language
+- ✅ **Download Resume** - Export enhanced resume
+- ✅ **Copy to Clipboard** - Quick copy functionality
+- ✅ **Responsive Design** - Works on all devices
 
-- 🧠 **AI-powered resume enhancement** for ATS compatibility
-- 🎯 **Tone adjustment** to make resumes more professional
-- ⚡ **Action verb enhancement** to improve impact
-- 📄 **Real-time preview** — left pane (input) → right pane (AI-rewritten resume)
-- 💾 **Download resume** in one click
-- 📋 **Copy to clipboard** functionality
-
-### 📁 File Management
-
-- 📤 **File Upload** - Support for PDF, DOCX, and TXT files
-- 📝 **Text Input** - Paste resume text directly
-- 🔄 **Reset Function** - Return to default resume template
-- 📊 **Character Counter** - Track resume length
-
-### 🎨 User Experience
-
-- 🌗 **Modern UI** with smooth layout and clean typography
-- 🚀 **Fully responsive** — optimized for desktop and tablet view
-- ⚡ **Loading States** - Visual feedback for all operations
-- 🎯 **Error Handling** - Comprehensive error management
-- 🖨️ **Print Optimization** - Clean print layout
-
-### 🔧 Technical Features
-
-- ⚙️ **Deployed on Vercel** with zero-config build
-- 🔒 **TypeScript** - Full type safety
-- 🎨 **Tailwind CSS** - Modern styling
-- 📱 **Mobile Responsive** - Works on all devices
-- 🤖 **AI Integration** - Google Genkit + Gemini 2.5 Flash
+### Current Limitations
+- ⚠️ No database (works in memory only)
+- ⚠️ No user accounts (single-session usage)
+- ⚠️ No resume history
 
 ---
 
-## 🧰 Tech Stack
+## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|-----------|
-| **Frontend Framework** | Next.js 15 (App Router) |
-| **Language** | TypeScript |
-| **Styling** | Tailwind CSS + shadcn/ui |
-| **AI Integration** | Google Genkit + Gemini 2.5 Flash |
-| **UI Components** | Radix UI + Lucide Icons |
-| **State Management** | React Hooks + Server Actions |
-| **File Processing** | Custom API Routes |
-| **Deployment** | Vercel |
-| **Version Control** | Git + GitHub |
+**Frontend**:
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui components
+- React Hook Form
+
+**AI Integration**:
+- Google Genkit
+- Google Gemini 2.5 Flash API
+- Server Actions
+
+**Deployment**:
+- Vercel (Frontend)
+- Vercel Edge Functions (AI processing)
 
 ---
 
-## 📊 Database Schema
+## 🚀 Getting Started
 
-### Resume Collection
-```javascript
-{
-  _id: ObjectId,
-  userId: String,
-  filename: String,
-  uploadedAt: Date,
-  parsedData: {
-    personalInfo: {
-      name: String,
-      email: String,
-      phone: String,
-      location: String
-    },
-    experience: [{
-      title: String,
-      company: String,
-      duration: String,
-      description: String
-    }],
-    education: [{
-      degree: String,
-      institution: String,
-      year: String
-    }],
-    skills: [String],
-    atsScore: Number
-  },
-  optimizedVersion: String,
-  createdAt: Date
-}
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Google AI API Key ([Get free key](https://aistudio.google.com/app/apikey))
+
+### Installation
+
+```bash
+# Clone repository
+git clone https://github.com/unnita1235/AI-Resume-Parser.git
+cd AI-Resume-Parser
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+
+# Add your Google AI API key:
+# GOOGLE_GENAI_API_KEY=your_api_key_here
+
+# Run development server
+npm run dev
+
+# Open http://localhost:3000
 ```
 
 ---
 
-## 📡 Backend API Endpoints
+## 📁 Project Structure
 
-### Node.js Express Backend (Port 5000)
-
-| Method | Endpoint | Description | Request Body | Response |
-|--------|----------|-------------|--------------|----------|
-| `POST` | `/api/parse` | Upload and parse resume | `FormData` with `file` | Parsed resume data |
-| `GET` | `/api/resumes` | Get all parsed resumes | None | Array of resumes |
-| `GET` | `/api/resumes/:id` | Get single resume by ID | None | Single resume object |
-| `GET` | `/health` | Health check endpoint | None | Server status |
-
-### API Usage Examples
-
-#### Example 1: Upload and Parse Resume
-
-**Request:**
-curl -X POST http://localhost:5000/api/parse
--F "file=@resume.pdf"
--H "Content-Type: multipart/form-data"
-
-text
-
-**Success Response:**
-{
-"success": true,
-"message": "Resume parsed successfully",
-"data": {
-"name": "John Doe",
-"contact": {
-"email": "john.doe@example.com",
-"phone": "+1-234-567-8900",
-"linkedin": "linkedin.com/in/johndoe",
-"github": "github.com/johndoe",
-"location": "San Francisco, CA"
-},
-"summary": "Experienced software engineer with 5+ years in full-stack development...",
-"skills": [
-"JavaScript",
-"TypeScript",
-"React",
-"Node.js",
-"Python",
-"MongoDB",
-"AWS"
-],
-"experience": [
-{
-"title": "Senior Software Engineer",
-"company": "Tech Corp Inc.",
-"location": "San Francisco, CA",
-"duration": "Jan 2020 - Present",
-"description": "Led development of microservices architecture serving 1M+ users. Improved system performance by 40%.",
-"highlights": [
-"Architected scalable backend systems",
-"Mentored junior developers",
-"Implemented CI/CD pipelines"
-]
-},
-{
-"title": "Software Engineer",
-"company": "StartUp Co.",
-"location": "Remote",
-"duration": "Jun 2018 - Dec 2019",
-"description": "Developed full-stack web applications using React and Node.js.",
-"highlights": [
-"Built 10+ customer-facing features",
-"Reduced load time by 50%"
-]
-}
-],
-"education": [
-{
-"degree": "Bachelor of Science in Computer Science",
-"institution": "University of California",
-"location": "Berkeley, CA",
-"year": "2018",
-"gpa": "3.8/4.0"
-}
-],
-"certifications": [
-"AWS Certified Solutions Architect",
-"Google Cloud Professional"
-],
-"languages": ["English (Native)", "Spanish (Intermediate)"]
-},
-"resumeId": "507f1f77bcf86cd799439011",
-"parsedAt": "2025-11-24T06:00:00Z"
-}
-
-text
-
-**Error Response:**
-{
-"success": false,
-"message": "No file uploaded",
-"error": "FILE_REQUIRED",
-"statusCode": 400
-}
-
-text
-
-#### Example 2: Get All Parsed Resumes
-
-**Request:**
-curl -X GET http://localhost:5000/api/resumes
-
-text
-
-**Response:**
-{
-"success": true,
-"count": 2,
-"data": [
-{
-"id": "507f1f77bcf86cd799439011",
-"name": "John Doe",
-"email": "john.doe@example.com",
-"parsedAt": "2025-11-24T06:00:00Z"
-},
-{
-"id": "507f1f77bcf86cd799439012",
-"name": "Jane Smith",
-"email": "jane.smith@example.com",
-"parsedAt": "2025-11-23T14:30:00Z"
-}
-]
-}
-
-text
-
-#### Example 3: Get Single Resume by ID
-
-**Request:**
-curl -X GET http://localhost:5000/api/resumes/507f1f77bcf86cd799439011
-
-text
-
-**Response:**
-{
-"success": true,
-"data": {
-"id": "507f1f77bcf86cd799439011",
-"name": "John Doe",
-"contact": { ... },
-"experience": [ ... ],
-"education": [ ... ]
-}
-}
-
-text
-
-#### Example 4: Health Check
-
-**Request:**
-curl -X GET http://localhost:5000/health
-
-text
-
-**Response:**
-{
-"status": "OK",
-"timestamp": "2025-11-24T06:00:00Z",
-"uptime": 86400,
-"service": "AI Resume Parser API"
-}
-
-text
-
----
-
-## ⚙️ Getting Started (Local Development)
-
-### Prerequisites
-
-- **Node.js v18+** 
-- **npm** or **yarn**
-- **Git**
-
-### 1️⃣ Clone the repository
-
-git clone https://github.com/unnita1235/AI-Resume-Parser-main.git
-cd AI-Resume-Parser-main
-
-text
-
-### 2️⃣ Install dependencies
-
-npm install
-
-or
-yarn install
-
-text
-
-### 3️⃣ Set up environment variables
-
-Create a `.env.local` file in the root directory:
-
-Google AI API Configuration
-GOOGLE_AI_API_KEY=your_google_ai_api_key_here
-
-Next.js Configuration
-NEXT_PUBLIC_API_URL=http://localhost:3000
-
-Development Configuration
-NODE_ENV=development
-
-text
-
-**Getting Your Google AI API Key:**
-
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Sign in with your Google account
-3. Click on "Get API Key" in the left sidebar
-4. Create a new API key
-5. Copy the API key and paste it in your `.env.local` file
-
-⚠️ **Important:** Never commit `.env.local` — keep it private.
-
-### 4️⃣ Run development server
-
-npm run dev
-
-or
-yarn dev
-
-text
-
-Open 👉 http://localhost:3000
-
----
-
-## 🏗️ Project Structure
-
+```
 AI-Resume-Parser/
-├── public/
-│ └── screenshots/
-│ ├── AI-Resume-Parser.png
-│ └── AI-Resume-Parser1.png
 ├── src/
-│ ├── app/
-│ │ ├── page.tsx # Home page
-│ │ ├── layout.tsx # Root layout
-│ │ ├── api/ # API routes
-│ │ │ ├── parse/ # Resume parsing
-│ │ │ └── enhance/ # AI enhancement
-│ │ └── globals.css # Global styles
-│ ├── components/
-│ │ ├── ResumeEditor.tsx # Main editor component
-│ │ ├── FileUpload.tsx # File upload handler
-│ │ ├── PreviewPane.tsx # Resume preview
-│ │ └── ui/ # shadcn/ui components
-│ ├── lib/
-│ │ ├── ai.ts # AI integration
-│ │ ├── parser.ts # Resume parsing logic
-│ │ └── utils.ts # Utility functions
-│ └── types/
-│ └── resume.ts # TypeScript types
-├── .env.example # Environment template
-├── package.json
-├── tailwind.config.js
-├── next.config.js
-└── README.md
-
-text
+│   ├── app/
+│   │   ├── page.tsx          # Main resume editor
+│   │   ├── api/              # API routes
+│   │   └── layout.tsx        # Root layout
+│   ├── components/
+│   │   ├── ResumeEditor.tsx  # Main editor component
+│   │   ├── FileUpload.tsx    # File handling
+│   │   └── ui/               # shadcn components
+│   ├── lib/
+│   │   ├── ai.ts             # AI integration
+│   │   └── utils.ts          # Utilities
+│   └── actions/
+│       └── enhance.ts        # AI enhancement action
+├── public/
+│   └── screenshots/          # App screenshots
+└── package.json
+```
 
 ---
 
-## 🧱 Build for Production
+## 🤖 AI Capabilities
 
-Build production version
-npm run build
+### Google Gemini Integration
 
-Start production server
-npm run start
+**What the AI does**:
+1. Analyzes resume text structure
+2. Suggests ATS-friendly improvements
+3. Enhances professional tone
+4. Replaces weak verbs with action verbs
+5. Improves clarity and impact
 
-text
-
----
-
-## ☁️ Deploy to Vercel
-
-### Step-by-Step Deployment
-
-1. Go to [Vercel](https://vercel.com/)
-2. Click "New Project"
-3. Import your repository: `unnita1235/AI-Resume-Parser-main`
-4. Add environment variables:
-   - `GOOGLE_AI_API_KEY`: Your Google AI API key
-5. Click **Deploy** — done! 🎉
-
-**Vercel automatically handles:**
-- Dependency installation
-- Next.js build process
-- Continuous deployment for each commit
-
-**Production URL:** https://ai-resume-parser-seven.vercel.app/
+**API Usage**:
+- Real API calls to Google Gemini
+- Streaming responses for better UX
+- Error handling for failed requests
+- Rate limiting awareness
 
 ---
 
-## 🧩 NPM Scripts
+## 🎯 What This Project Proves
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build production version |
-| `npm run start` | Run production build |
-| `npm run lint` | Lint codebase |
-| `npm run typecheck` | TypeScript type checking |
-| `npm run format` | Format code with Prettier |
+### Skills Demonstrated
+- ✅ **Production AI Integration** - Real Google Gemini API usage
+- ✅ **Full-Stack Next.js** - Server actions + client components
+- ✅ **TypeScript** - Type-safe implementation
+- ✅ **Modern React** - Hooks, context, best practices
+- ✅ **File Processing** - PDF, DOCX text extraction
+- ✅ **Deployed & Working** - Live production application
+- ✅ **Error Handling** - Graceful failure management
+- ✅ **Responsive Design** - Mobile-first approach
 
----
-
-## ⚡ Performance Metrics
-
-| Metric | Value | Proof |
-|--------|-------|-------|
-| Parsing Accuracy | 92% | [Test Results](docs/accuracy-tests.md) |
-| Processing Time | <2s per resume | Load test results |
-| Supported Formats | PDF, DOCX, TXT | ✅ |
-| Max File Size | 5MB | ✅ |
-| Database Records | 500+ parsed resumes | [Screenshot](screenshots/db.png) |
-
-### Real Performance Data:
-- Tested on 100 resumes from diverse backgrounds
-- Average extraction accuracy: 92.3%
-- Field-by-field breakdown:
-  - Contact Info: 98% accuracy
-  - Work Experience: 94% accuracy  
-  - Skills: 89% accuracy
-  - Education: 91% accuracy
+### What's Missing (Roadmap)
+- 🚧 Backend database for resume storage
+- 🚧 User authentication
+- 🚧 Resume history tracking
+- 🚧 PDF export with formatting
+- 🚧 Multiple resume versions
 
 ---
 
-## 💡 Future Enhancements
+## 🔧 Available Scripts
 
-- [ ] Resume scoring system (ATS ranking %)
-- [ ] Multi-language tone & grammar enhancement
-- [ ] Export in DOCX / PDF formats with design templates
-- [ ] AI keyword matcher for specific job descriptions
-- [ ] Resume template library
-- [ ] Cover letter generation
-- [ ] Interview preparation tips
-- [ ] LinkedIn profile optimization
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. **Fork the repository**
-2. **Create a feature branch:**
-git checkout -b feature/your-feature-name
-
-text
-3. **Commit your changes:**
-git commit -m "feat: add new feature"
-
-text
-4. **Push to your fork:**
-git push origin feature/your-feature-name
-
-text
-5. **Open a Pull Request on GitHub**
-
-### Code Standards
-- Use TypeScript for type safety
-- Follow ESLint configuration
-- Write descriptive commit messages
-- Add tests for new features
-- Update documentation
+```bash
+npm run dev        # Development server
+npm run build      # Production build
+npm run start      # Production server
+npm run lint       # ESLint
+npm run typecheck  # TypeScript checking
+```
 
 ---
 
-## 🪪 License
+## 📝 How It Works
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+1. **User uploads resume** or pastes text
+2. **File is processed** - Extract text from PDF/DOCX
+3. **AI analyzes content** - Google Gemini processes text
+4. **Suggestions displayed** - Real-time enhancement options
+5. **User applies changes** - Update resume with improvements
+6. **Download enhanced resume** - Export final version
+
+---
+
+## 🎨 UI Features
+
+- **Split-pane editor** - Input on left, preview on right
+- **Character counter** - Track resume length
+- **Loading states** - Visual feedback during AI processing
+- **Error messages** - Clear error communication
+- **Mobile responsive** - Works on all screen sizes
+- **Clean design** - Professional, minimal interface
+
+---
+
+## 📄 License
+
+MIT License - Portfolio/Production Project
 
 ---
 
 ## 👤 Author
 
 **Unni T A**  
-Full-Stack Developer
+Frontend Developer with AI Integration Experience
 
 - GitHub: [@unnita1235](https://github.com/unnita1235)
 - Email: unnita1235@gmail.com
 - Portfolio: https://github.com/unnita1235
-- Live App: https://ai-resume-parser-seven.vercel.app/
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **Next.js** team for the amazing framework
-- **Vercel** for seamless deployment
-- **Google Genkit** for AI capabilities
-- **shadcn/ui** for beautiful components
-- **Tailwind CSS** for utility-first styling
+- Google Genkit team for AI framework
+- Google Gemini for powerful AI model
+- Next.js for excellent framework
+- Vercel for seamless deployment
+- shadcn/ui for component library
 
 ---
 
-**AI Resume Parser & Rewriter** — Smarter, Faster, and Professionally Enhanced Resumes.
+## 💡 Project Highlights
+
+This is my **flagship project** - the only one in my portfolio that is:
+- ✅ Fully functional and deployed
+- ✅ Using real AI integration (not fake)
+- ✅ Processing actual user data
+- ✅ Handling errors gracefully
+- ✅ Production-ready code quality
+
+**This demonstrates I can**:
+- Integrate complex AI APIs
+- Build complete, working applications
+- Deploy to production
+- Handle real user interactions
+- Write clean, maintainable code
+
+---
+
+## 🚀 Future Enhancements
+
+### Phase 1 (Next Month)
+- [ ] Add Express.js backend
+- [ ] PostgreSQL database integration
+- [ ] User authentication (JWT)
+- [ ] Resume storage and history
+
+### Phase 2 (2-3 Months)
+- [ ] Multiple resume versions
+- [ ] Custom templates
+- [ ] PDF export with formatting
+- [ ] Cover letter generation
+
+### Phase 3 (Future)
+- [ ] Job description matching
+- [ ] LinkedIn profile optimization
+- [ ] Interview preparation tips
+
+---
+
+**Status**: ✅ **PRODUCTION READY** - Fully working AI-powered application
+
+*Last updated: January 2026*
+
+---
+
+**This is my only complete project. The others are frontend prototypes.**
