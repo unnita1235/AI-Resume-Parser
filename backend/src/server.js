@@ -8,6 +8,9 @@ const pdf = require('pdf-parse');
 const mammoth = require('mammoth');
 require('dotenv').config();
 
+// Keep-alive mechanism to prevent Render free tier service from sleeping
+require('./keep-alive').startKeepAlive();
+
 const app = express();
 
 // ==================== CONFIGURATION ====================
