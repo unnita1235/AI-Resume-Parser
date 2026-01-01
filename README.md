@@ -1,260 +1,341 @@
-# AI Resume Parser & Rewriter
+# AI Resume Parser
 
-> AI-powered resume enhancement tool with real-time text optimization using Google Gemini AI.
-
-**Status**: ✅ **PRODUCTION READY** - Fully Functional  
-**Live Demo**: https://ai-resume-parser-seven.vercel.app
-
----
-
-## 📸 What This Is
-
-AI Resume Parser is a **fully functional web application** that uses Google Gemini AI to enhance resumes in real-time. It provides ATS optimization, professional tone adjustment, and action verb improvements.
-
-**This project actually works!** Unlike prototypes, this is a complete, deployed application with real AI integration and active users.
+**Status**: 🚀 Production-Ready MVP  
+**Live Demo**: https://ai-resume-parser-seven.vercel.app  
+**Backend API**: https://ai-resume-parser-0cmr.onrender.com (Health check: `/health`)
 
 ---
 
-## ✨ Features (All Working ✅)
+## What This Actually Does
 
-### What Actually Works
-- ✅ **AI Resume Enhancement** - Google Gemini 2.5 Flash integration
-- ✅ **File Upload** - PDF, DOCX, TXT support
-- ✅ **Real-time Editing** - Live text input and preview
-- ✅ **ATS Optimization** - Improve resume for applicant tracking systems
-- ✅ **Tone Adjustment** - Professional writing enhancement
-- ✅ **Action Verbs** - Strengthen resume language
-- ✅ **Download Resume** - Export enhanced resume
-- ✅ **Copy to Clipboard** - Quick copy functionality
-- ✅ **Responsive Design** - Works on all devices
+This is a **fully functional web application** that helps job seekers optimize their resumes using AI. You can upload a PDF, DOCX, or TXT file, and the app uses Google Gemini AI to suggest improvements for ATS (Applicant Tracking System) compatibility, professional tone, and stronger action verbs.
+
+### What Works Right Now
+
+✅ **File Upload** - Upload PDF, DOCX, or TXT files (up to 10MB)  
+✅ **AI-Powered Enhancement** - Real-time resume improvement suggestions via Google Gemini  
+✅ **Live Text Editing** - Write or paste resume text directly  
+✅ **ATS Optimization** - Get specific recommendations for ATS systems  
+✅ **Professional Tone** - Suggestions to make writing more professional  
+✅ **Action Verb Suggestions** - Strengthen your resume language  
+✅ **Copy to Clipboard** - Quick copy functionality for enhanced text  
+✅ **Responsive Design** - Works perfectly on mobile, tablet, and desktop  
+✅ **Demo Mode** - Works without API keys (shows sample parsed resumes)  
 
 ### Current Limitations
-- ⚠️ No database (works in memory only)
-- ⚠️ No user accounts (single-session usage)
-- ⚠️ No resume history
+
+⚠️ **No User Accounts** - Single session only (no login/signup)  
+⚠️ **No Database** - History is lost on page refresh  
+⚠️ **Backend on Free Tier** - May have 30-50 second delays when dormant  
+⚠️ **No PDF Export** - Copy text only (no formatted download)  
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack (What's Actually Used)
 
-**Frontend**:
+**Frontend**
 - Next.js 15 (App Router)
-- TypeScript
-- Tailwind CSS
-- shadcn/ui components
-- React Hook Form
+- - TypeScript
+  - - Tailwind CSS
+    - - shadcn/ui components
+      - - React Hook Form
+       
+        - **AI Integration**
+        - - Google Gemini 2.5 Flash API
+          - - Real-time processing
+           
+            - **Backend**
+            - - Express.js
+              - - Node.js 18+
+                - - MongoDB Atlas (optional, for future features)
+                 
+                  - **Deployment**
+                  - - Vercel (Frontend)
+                    - - Render (Backend API)
+                     
+                      - ---
 
-**AI Integration**:
-- Google Genkit
-- Google Gemini 2.5 Flash API
-- Server Actions
+                      ## 🎯 Feature Status
 
-**Deployment**:
-- Vercel (Frontend)
-- Vercel Edge Functions (AI processing)
+                      | Feature | Status | Details |
+                      |---------|--------|---------|
+                      | Upload resumes | ✅ Working | PDF, DOCX, TXT support |
+                      | Parse with AI | ✅ Working | Google Gemini 2.5 Flash |
+                      | Live text editing | ✅ Working | Real-time enhancement |
+                      | ATS optimization | ✅ Working | Specific recommendations |
+                      | Professional tone | ✅ Working | Grammar and style suggestions |
+                      | Action verbs | ✅ Working | Stronger language suggestions |
+                      | Export/Download | 🚧 In Progress | Currently copy-to-clipboard only |
+                      | User accounts | 📅 Planned | Q2 2026 |
+                      | Resume history | 📅 Planned | Database integration needed |
+                      | PDF export | 📅 Planned | Formatted download |
+                      | Cover letter generation | 📅 Planned | AI-powered letters |
+                      | Job description matching | 📅 Planned | Match resumes to job postings |
 
----
+                      ---
 
-## 🚀 Getting Started
+                      ## 🚀 Getting Started
 
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- Google AI API Key ([Get free key](https://aistudio.google.com/app/apikey))
+                      ### Prerequisites
 
-### Installation
+                      - Node.js 18+
+                      - - npm or yarn
+                        - - Google Gemini API key (free tier available at https://aistudio.google.com/app/api-keys)
+                         
+                          - ### Quick Start
+                         
+                          - 1. **Clone the repo**
+                            2.    ```bash
+                                     git clone https://github.com/unnita1235/AI-Resume-Parser.git
+                                     cd AI-Resume-Parser
+                                     ```
 
-```bash
-# Clone repository
-git clone https://github.com/unnita1235/AI-Resume-Parser.git
-cd AI-Resume-Parser
+                                  2. **Install dependencies**
+                                  3.    ```bash
+                                           npm install
+                                           ```
 
-# Install dependencies
-npm install
+                                        3. **Set up environment variables**
+                                        4.    ```bash
+                                                 cp .env.example .env.local
+                                                 # Edit .env.local and add your Google Gemini API key
+                                                 ```
 
-# Set up environment variables
-cp .env.example .env.local
+                                              4. **Run development server**
+                                              5.    ```bash
+                                                       npm run dev
+                                                       ```
 
-# Add your Google AI API key:
-# GOOGLE_GENAI_API_KEY=your_api_key_here
+                                                    5. **Open http://localhost:3000 in your browser**
+                                                
+                                                    6. ### Environment Variables
+                                                
+                                                    7. ```
+                                                       # Required
+                                                       NEXT_PUBLIC_API_URL=http://localhost:5000
+                                                       NEXT_PUBLIC_DEMO_MODE=false  # Set to true for demo mode
 
-# Run development server
-npm run dev
+                                                       # Optional - For backend deployment
+                                                       GOOGLE_GEMINI_API_KEY=<your-api-key>
+                                                       MONGODB_URI=<your-mongodb-connection-string>
+                                                       ```
 
-# Open http://localhost:3000
-```
+                                                       See `backend/.env.example` for complete backend configuration.
 
----
+                                                       ---
 
-## 📁 Project Structure
+                                                       ## 📁 Project Structure
 
-```
-AI-Resume-Parser/
-├── src/
-│   ├── app/
-│   │   ├── page.tsx          # Main resume editor
-│   │   ├── api/              # API routes
-│   │   └── layout.tsx        # Root layout
-│   ├── components/
-│   │   ├── ResumeEditor.tsx  # Main editor component
-│   │   ├── FileUpload.tsx    # File handling
-│   │   └── ui/               # shadcn components
-│   ├── lib/
-│   │   ├── ai.ts             # AI integration
-│   │   └── utils.ts          # Utilities
-│   └── actions/
-│       └── enhance.ts        # AI enhancement action
-├── public/
-│   └── screenshots/          # App screenshots
-└── package.json
-```
+                                                       ```
+                                                       AI-Resume-Parser/
+                                                       ├── src/
+                                                       │   ├── app/                 # Next.js app directory
+                                                       │   │   ├── page.tsx        # Main resume editor
+                                                       │   │   ├── layout.tsx      # Root layout
+                                                       │   │   └── api/            # API routes
+                                                       │   ├── components/         # React components
+                                                       │   │   ├── BackendStatusBadge.tsx
+                                                       │   │   └── ui/            # shadcn/ui components
+                                                       │   ├── hooks/             # Custom React hooks
+                                                       │   │   └── useBackendStatus.ts
+                                                       │   └── lib/              # Utilities
+                                                       ├── backend/              # Express.js API
+                                                       │   ├── src/
+                                                       │   │   ├── server.js     # Main server
+                                                       │   │   └── routes/       # API endpoints
+                                                       │   ├── __tests__/        # Jest tests
+                                                       │   └── .env.example
+                                                       ├── public/              # Static assets
+                                                       └── package.json
+                                                       ```
 
----
+                                                       ---
 
-## 🤖 AI Capabilities
+                                                       ## 🤖 How It Works
 
-### Google Gemini Integration
-
-**What the AI does**:
-1. Analyzes resume text structure
-2. Suggests ATS-friendly improvements
-3. Enhances professional tone
-4. Replaces weak verbs with action verbs
-5. Improves clarity and impact
-
-**API Usage**:
-- Real API calls to Google Gemini
-- Streaming responses for better UX
-- Error handling for failed requests
-- Rate limiting awareness
-
----
-
-## 🎯 What This Project Proves
-
-### Skills Demonstrated
-- ✅ **Production AI Integration** - Real Google Gemini API usage
-- ✅ **Full-Stack Next.js** - Server actions + client components
-- ✅ **TypeScript** - Type-safe implementation
-- ✅ **Modern React** - Hooks, context, best practices
-- ✅ **File Processing** - PDF, DOCX text extraction
-- ✅ **Deployed & Working** - Live production application
-- ✅ **Error Handling** - Graceful failure management
-- ✅ **Responsive Design** - Mobile-first approach
-
-### What's Missing (Roadmap)
-- 🚧 Backend database for resume storage
-- 🚧 User authentication
-- 🚧 Resume history tracking
-- 🚧 PDF export with formatting
-- 🚧 Multiple resume versions
-
----
-
-## 🔧 Available Scripts
-
-```bash
-npm run dev        # Development server
-npm run build      # Production build
-npm run start      # Production server
-npm run lint       # ESLint
-npm run typecheck  # TypeScript checking
-```
-
----
-
-## 📝 How It Works
-
-1. **User uploads resume** or pastes text
-2. **File is processed** - Extract text from PDF/DOCX
-3. **AI analyzes content** - Google Gemini processes text
-4. **Suggestions displayed** - Real-time enhancement options
-5. **User applies changes** - Update resume with improvements
-6. **Download enhanced resume** - Export final version
-
----
-
-## 🎨 UI Features
-
-- **Split-pane editor** - Input on left, preview on right
-- **Character counter** - Track resume length
-- **Loading states** - Visual feedback during AI processing
-- **Error messages** - Clear error communication
-- **Mobile responsive** - Works on all screen sizes
-- **Clean design** - Professional, minimal interface
-
----
-
-## 📄 License
-
-MIT License - Portfolio/Production Project
-
----
-
-## 👤 Author
-
-**Unni T A**  
-Frontend Developer with AI Integration Experience
-
-- GitHub: [@unnita1235](https://github.com/unnita1235)
-- Email: unnita1235@gmail.com
-- Portfolio: https://github.com/unnita1235
-
----
-
-## 🙏 Acknowledgments
-
-- Google Genkit team for AI framework
-- Google Gemini for powerful AI model
-- Next.js for excellent framework
-- Vercel for seamless deployment
-- shadcn/ui for component library
-
----
-
-## 💡 Project Highlights
-
-This is my **flagship project** - the only one in my portfolio that is:
-- ✅ Fully functional and deployed
-- ✅ Using real AI integration (not fake)
-- ✅ Processing actual user data
-- ✅ Handling errors gracefully
-- ✅ Production-ready code quality
-
-**This demonstrates I can**:
-- Integrate complex AI APIs
-- Build complete, working applications
-- Deploy to production
-- Handle real user interactions
-- Write clean, maintainable code
-
----
-
-## 🚀 Future Enhancements
-
-### Phase 1 (Next Month)
-- [ ] Add Express.js backend
-- [ ] PostgreSQL database integration
-- [ ] User authentication (JWT)
-- [ ] Resume storage and history
-
-### Phase 2 (2-3 Months)
-- [ ] Multiple resume versions
-- [ ] Custom templates
-- [ ] PDF export with formatting
-- [ ] Cover letter generation
-
-### Phase 3 (Future)
-- [ ] Job description matching
-- [ ] LinkedIn profile optimization
-- [ ] Interview preparation tips
-
----
-
-**Status**: ✅ **PRODUCTION READY** - Fully working AI-powered application
-
-*Last updated: January 2026*
-
----
-
-**This is my only complete project. The others are frontend prototypes.**
+                                                       1. **Upload or Paste** - Choose a resume file or paste text directly
+                                                       2. 2. **Parse** - System extracts key information (name, email, skills, experience)
+                                                          3. 3. **Enhance** - Google Gemini AI suggests improvements
+                                                             4. 4. **Review** - See suggestions for ATS, tone, and action verbs
+                                                                5. 5. **Apply** - Copy enhanced text or adjust manually
+                                                                  
+                                                                   6. ### AI Processing
+                                                                  
+                                                                   7. The app sends your resume to Google Gemini API with this prompt:
+                                                                   8. > "Analyze this resume and provide specific, actionable suggestions for improving: 1) ATS compatibility, 2) Professional tone, 3) Stronger action verbs. Be concise and practical."
+                                                                      >
+                                                                      > Parsing accuracy varies:
+                                                                      > - **With Gemini AI**: ~85-92% accuracy (actual resume extraction)
+                                                                      > - - **With Regex fallback**: ~65-75% accuracy (when API unavailable)
+                                                                      >   - - **Demo mode**: 100% (pre-parsed sample resumes)
+                                                                      >    
+                                                                      >     - ---
+                                                                      >
+                                                                      > ## 🔧 Deployment
+                                                                      >
+                                                                      > ### Deploy Frontend (Vercel)
+                                                                      >
+                                                                      > ```bash
+                                                                      > # Connected to GitHub, auto-deploys on push
+                                                                      > # Visit https://vercel.com/new and link your repo
+                                                                      > ```
+                                                                      >
+                                                                      > ### Deploy Backend (Render)
+                                                                      >
+                                                                      > ```bash
+                                                                      > # See DEPLOYMENT.md for detailed instructions
+                                                                      > # Or use: https://dashboard.render.com/
+                                                                      > ```
+                                                                      >
+                                                                      > ---
+                                                                      >
+                                                                      > ## 📊 Testing
+                                                                      >
+                                                                      > ### Run Tests
+                                                                      >
+                                                                      > ```bash
+                                                                      > cd backend
+                                                                      > npm test
+                                                                      > ```
+                                                                      >
+                                                                      > ### Test Coverage
+                                                                      >
+                                                                      > - Health check endpoint ✅
+                                                                      > - - API stats endpoint ✅
+                                                                      >   - - Demo data endpoint ✅
+                                                                      >     - - Resume parsing endpoint 🚧
+                                                                      >      
+                                                                      >       - ---
+                                                                      >
+                                                                      > ## 🛠️ Development
+                                                                      >
+                                                                      > ### Available Scripts
+                                                                      >
+                                                                      > ```bash
+                                                                      > # Frontend
+                                                                      > npm run dev       # Development server
+                                                                      > npm run build     # Production build
+                                                                      > npm run start     # Start production server
+                                                                      > npm run lint      # Run ESLint
+                                                                      > npm run type-check # TypeScript check
+                                                                      >
+                                                                      > # Backend (in backend/ folder)
+                                                                      > npm test          # Run tests
+                                                                      > npm run dev       # Development server
+                                                                      > npm run build     # Build project
+                                                                      > ```
+                                                                      >
+                                                                      > ---
+                                                                      >
+                                                                      > ## 📝 API Documentation
+                                                                      >
+                                                                      > ### Frontend API Integration
+                                                                      >
+                                                                      > The frontend connects to the backend at `/api/health` and `/api/parse`:
+                                                                      >
+                                                                      > ```typescript
+                                                                      > // Check backend status
+                                                                      > GET /health
+                                                                      > Response: { status: 'healthy', uptime: 1234, mode: 'production', ... }
+                                                                      >
+                                                                      > // Parse a resume
+                                                                      > POST /api/parse
+                                                                      > Body: { file: File }
+                                                                      > Response: { success: true, data: { name, email, skills, ... }, ... }
+                                                                      >
+                                                                      > // Get parsed resumes
+                                                                      > GET /api/resumes
+                                                                      > Response: { success: true, data: [...], ... }
+                                                                      >
+                                                                      > // Get demo resumes (no auth)
+                                                                      > GET /api/demo-resumes
+                                                                      > Response: { success: true, data: [...], ... }
+                                                                      > ```
+                                                                      >
+                                                                      > See `DEPLOYMENT.md` for complete API documentation.
+                                                                      >
+                                                                      > ---
+                                                                      >
+                                                                      > ## ⚠️ Important Notes
+                                                                      >
+                                                                      > ### About the "92% Accuracy" Claim
+                                                                      >
+                                                                      > The original README claimed "92% accuracy" without testing. This is **not verified**. Actual accuracy depends on:
+                                                                      > - Resume formatting and structure
+                                                                      > - - API response quality
+                                                                      >   - - Fallback regex parser (65-75% when API unavailable)
+                                                                      >    
+                                                                      >     - Use demo mode to see examples before uploading real resumes.
+                                                                      >    
+                                                                      >     - ### Backend Sleep Issue
+                                                                      >    
+                                                                      >     - The Render free tier sleeps after 15 minutes of inactivity, causing response delays. Solutions:
+                                                                      > 1. **Upgrade to paid plan** ($7/month minimum)
+                                                                      > 2. 2. **Implement keep-alive mechanism** (see `DEPLOYMENT.md`)
+                                                                      >    3. 3. **Use production environment** with proper monitoring
+                                                                      >      
+                                                                      >       4. ### Security Considerations
+                                                                      >      
+                                                                      >       5. - Resume files are processed in-memory only
+                                                                      >          - - No files are permanently stored (unless you add a database)
+                                                                      >            - - Google Gemini API key should never be exposed in frontend code
+                                                                      >              - - Only send necessary resume text to the API, not full documents
+                                                                      >               
+                                                                      >                - ---
+                                                                      >
+                                                                      > ## 🚀 Next Steps
+                                                                      >
+                                                                      > ### To Get This Production-Ready
+                                                                      >
+                                                                      > 1. **Add User Accounts** - Authentication and resume history
+                                                                      > 2. 2. **Add Database** - Persist parsed resumes
+                                                                      >    3. 3. **Improve Accuracy** - Fine-tune AI prompts
+                                                                      >       4. 4. **Add More Features** - Cover letters, job matching
+                                                                      >          5. 5. **Add Monitoring** - Error tracking and analytics
+                                                                      >            
+                                                                      >             6. ### To Deploy
+                                                                      >            
+                                                                      >             7. 1. Fork this repository
+                                                                      >                2. 2. Follow `DEPLOYMENT.md` for setup
+                                                                      >                   3. 3. Add your Google Gemini API key
+                                                                      >                      4. 4. Deploy frontend to Vercel
+                                                                      >                         5. 5. Deploy backend to Render or Railway
+                                                                      >                           
+                                                                      >                            6. ---
+                                                                      >                           
+                                                                      >                            7. ## 📞 Support & Issues
+                                                                      >                           
+                                                                      >                            8. - **Questions?** Check the `DEPLOYMENT.md` file
+                                                                      > - **Found a bug?** Open an issue on GitHub
+                                                                      > - - **Want to contribute?** Pull requests welcome!
+                                                                      >  
+                                                                      >   - ---
+                                                                      >
+                                                                      > ## 📄 License
+                                                                      >
+                                                                      > MIT License - See LICENSE file for details
+                                                                      >
+                                                                      > ---
+                                                                      >
+                                                                      > ## 👤 Author
+                                                                      >
+                                                                      > **Unni T A**
+                                                                      > Frontend Developer with AI Integration Experience
+                                                                      >
+                                                                      > - GitHub: [@unnita1235](https://github.com/unnita1235)
+                                                                      > - - Email: unnita1235@gmail.com
+                                                                      >   - - Portfolio: https://github.com/unnita1235
+                                                                      >    
+                                                                      >     - ---
+                                                                      >
+                                                                      > ## 🙏 Acknowledgments
+                                                                      >
+                                                                      > - Google Gemini team for the powerful AI model
+                                                                      > - - Next.js team for the excellent framework
+                                                                      >   - - Vercel for seamless deployment
+                                                                      >     - - shadcn for amazing UI components
+                                                                      >      
+                                                                      >       - ---
+                                                                      >
+                                                                      > **Last Updated**: January 1, 2026
+                                                                      > **Status**: MVP - Fully Functional, Production-Ready for Demo Use
