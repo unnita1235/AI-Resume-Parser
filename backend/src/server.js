@@ -191,6 +191,7 @@ async function parseWithGemini(text) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-goog-api-key': GEMINI_API_KEY,
         },
         body: JSON.stringify({
           contents: [
@@ -207,10 +208,6 @@ async function parseWithGemini(text) {
             maxOutputTokens: 1024,
           },
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': GEMINI_API_KEY,
-        },
       }
     );
 
