@@ -136,10 +136,7 @@ const connectMongoDB = () => {
   }
 
   mongoose
-    .connect(MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    .connect(MONGODB_URI)
     .then(() => {
       console.log('✅ MongoDB Connected');
       mongoConnected = true;
@@ -234,12 +231,12 @@ async function parseWithGemini(text) {
 
 // ==================== REGEX PARSING FALLBACK ====================
 function parseWithRegex(text) {
-  const emailRegex = /\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/;
+  const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
   const phoneRegex =
-    /(\\+\\d{1,3}[-.\\s]?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}/;
+    /(\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/;
   const linkedinRegex =
-    /linkedin\\.com\\/in\\/([\\w\\-]+)|linkedin\\.com\\/company\\/([\\w\\-]+)/i;
-  const githubRegex = /github\\.com\\/([\\w\\-]+)/i;
+    /linkedin\.com\/in\/([\w\-]+)|linkedin\.com\/company\/([\w\-]+)/i;
+  const githubRegex = /github\.com\/([\w\-]+)/i;
 
   const skillsKeywords = [
     'Python',
@@ -304,7 +301,13 @@ function parseWithRegex(text) {
 
   const foundSkills = [];
   skillsKeywords.forEach((skill) => {
-    if (new RegExp(`\\\\b${skill}\\\\b`, 'i').test(text)) {
+    // Escape special regex characters in skill names
+    const escapedSkill = skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    // For skills with dots or special chars, use a more flexible pattern
+    // Match if preceded/followed by word boundary, whitespace, comma, or start/end of string
+    const pattern = `(^|[\\s,])(${escapedSkill})($|[\\s,])`;
+    if (new RegExp(pattern, 'i').test(text)) {
       foundSkills.push(skill);
     }
   });
