@@ -10,7 +10,7 @@
  */
 
 const HEALTH_CHECK_INTERVAL = 25000; // 25 seconds
-const HEALTH_CHECK_ENDPOINT = 'http://localhost:' + (process.env.PORT || 5000) + '/api/health';
+const HEALTH_CHECK_ENDPOINT = 'http://localhost:' + (process.env.PORT || 5000) + '/health';
 /**
  * Start the keep-alive interval
  * Makes periodic requests to health endpoint to prevent service sleep

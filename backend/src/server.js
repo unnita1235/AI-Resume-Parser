@@ -198,7 +198,7 @@ async function parseWithGemini(text) {
             {
               parts: [
                 {
-                  text: `Parse this resume and extract structured information. Return JSON only with: { name, email, phone, linkedin, github, skills: [], experience: [], education: [], summary }. Resume:\\n\\n${text.substring(0, 4000)}`,
+                  text: `Parse this resume and extract structured information. Return JSON only with: { name, email, phone, linkedin, github, skills: [], experience: [], education: [], summary }. Resume:\n\n${text.substring(0, 4000)}`,
                 },
               ],
             },
@@ -222,7 +222,7 @@ async function parseWithGemini(text) {
     if (!content) return null;
 
     // Extract JSON from response
-    const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) return null;
 
     return JSON.parse(jsonMatch[0]);
@@ -234,12 +234,12 @@ async function parseWithGemini(text) {
 
 // ==================== REGEX PARSING FALLBACK ====================
 function parseWithRegex(text) {
-  const emailRegex = /\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/;
+  const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
   const phoneRegex =
-    /(\\+\\d{1,3}[-.\\s]?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}/;
+    /(\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/;
   const linkedinRegex =
-    /linkedin\\.com\\/in\\/([\\w\\-]+)|linkedin\\.com\\/company\\/([\\w\\-]+)/i;
-  const githubRegex = /github\\.com\\/([\\w\\-]+)/i;
+    /linkedin\.com\/in\/([\w\-]+)|linkedin\.com\/company\/([\w\-]+)/i;
+  const githubRegex = /github\.com\/([\w\-]+)/i;
 
   const skillsKeywords = [
     'Python',
@@ -294,7 +294,7 @@ function parseWithRegex(text) {
     'CI/CD',
   ];
 
-  const lines = text.split('\\n').filter((line) => line.trim().length > 0);
+  const lines = text.split('\n').filter((line) => line.trim().length > 0);
   const name = lines[0]?.trim() || 'Unknown';
 
   const emailMatch = text.match(emailRegex);
@@ -304,7 +304,7 @@ function parseWithRegex(text) {
 
   const foundSkills = [];
   skillsKeywords.forEach((skill) => {
-    if (new RegExp(`\\\\b${skill}\\\\b`, 'i').test(text)) {
+    if (new RegExp(`\\b${skill}\\b`, 'i').test(text)) {
       foundSkills.push(skill);
     }
   });
@@ -652,7 +652,7 @@ app.use((err, req, res, next) => {
 
 // ==================== START SERVER ====================
 app.listen(PORT, () => {
-  console.log(`\\n${'='.repeat(50)}`);
+  console.log(`\n${'='.repeat(50)}`);
   console.log(`✅ Server running on port ${PORT}`);
   console.log(`📁 Upload directory: ${uploadDir}`);
   console.log(`🤖 AI Mode: ${GEMINI_API_KEY ? 'Enabled' : 'Disabled'}`);
@@ -660,7 +660,7 @@ app.listen(PORT, () => {
   console.log(`📦 Database: ${mongoConnected ? 'Connected' : 'Disabled'}`);
   console.log(`🔗 Health check: GET /health`);
   console.log(`📈 Stats: GET /api/stats`);
-  console.log(`${'='.repeat(50)}\\n`);
+  console.log(`${'='.repeat(50)}\n`);
 });
 
 module.exports = app;
