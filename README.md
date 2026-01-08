@@ -20,6 +20,14 @@
 [API Reference](#-api-reference) •
 [Deployment](#-deployment)
 
+---
+
+## 📸 Preview
+
+<p align="center">
+  <img src="screenshots/app-preview.png" alt="AI Resume Parser Interface" width="800">
+</p>
+
 </div>
 
 ---
