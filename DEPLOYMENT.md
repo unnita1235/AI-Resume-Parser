@@ -1,155 +1,183 @@
-# Deployment Guide for AI Resume Parser
+# Deployment Guide
 
-## Quick Start - Render Deployment
+## Overview
 
-### Problem: Backend Sleeping on Free Tier
+This guide covers deploying the AI Resume Parser application with:
+- **Frontend**: Vercel (recommended) or any Next.js host
+- **Backend**: Render (recommended) or any Node.js host
 
-Your current Render free tier service sleeps after 15 minutes of inactivity, causing 30-50 second delays. This guide helps you fix it.
+---
 
-### Solution 1: Upgrade to Paid Plan (RECOMMENDED)
-- **Cost**: $7/month (cheapest paid tier)
-- - **Benefits**: No sleeping, always active, reliable
-  - - **How**: Go to Render Dashboard → Settings → Upgrade Plan
-   
-    - ### Solution 2: Keep-Alive Mechanism (Free Tier)
-    - If you want to stay on free tier, implement keep-alive:
-   
-    - #### Step 1: Update backend/src/server.js
-   
-    - Add this after the imports section:
-   
-    - ```javascript
-      // ==================== KEEP-ALIVE FOR FREE TIER ====================
-      if (process.env.KEEP_ALIVE_INTERVAL && process.env.NODE_ENV === 'production') {
-        const keepAliveInterval = parseInt(process.env.KEEP_ALIVE_INTERVAL);
-        setInterval(() => {
-          try {
-            const protocol = process.env.RENDER_EXTERNAL_URL ? 'https' : 'http';
-            const host = process.env.RENDER_EXTERNAL_URL || `localhost:${PORT}`;
-            fetch(`${protocol}://${host}/health`)
-              .catch(() => console.log('Keep-alive ping sent'));
-          } catch (err) {
-            console.error('Keep-alive error:', err.message);
-          }
-        }, keepAliveInterval);
-        console.log(`⏱️  Keep-alive enabled (${keepAliveInterval}ms interval)`);
-      }
-      ```
+## Frontend Deployment (Vercel)
 
-      #### Step 2: Set Environment Variables in Render
+### Step 1: Push to GitHub
 
-      Go to Render Dashboard → Environment and add:
+```bash
+git add .
+git commit -m "Prepare for deployment"
+git push origin main
+```
 
-      ```
-      PORT=5000
-      NODE_ENV=production
-      DEMO_MODE=false
-      MONGODB_URI=<your-mongodb-connection-string>
-      GOOGLE_GEMINI_API_KEY=<your-api-key>
-      MAX_FILE_SIZE=10485760
-      UPLOAD_PATH=./uploads
-      LOG_LEVEL=info
-      KEEP_ALIVE_INTERVAL=25000
-      ```
+### Step 2: Deploy to Vercel
 
-      #### Step 3: Verify Health Endpoint
+1. Go to [vercel.com/new](https://vercel.com/new)
+2. Import your GitHub repository
+3. Configure project settings:
+   - **Framework**: Next.js (auto-detected)
+   - **Root Directory**: `./` (leave default)
 
-      Test your health check works:
-      ```bash
-      curl https://<your-render-url>.onrender.com/health
-      ```
+### Step 3: Add Environment Variables
 
-      Expected response:
-      ```json
-      {
-        "status": "healthy",
-        "uptime": 1234,
-        "mode": "production",
-        "database": "connected",
-        "version": "2.0.0"
-      }
-      ```
+In Vercel Dashboard → Settings → Environment Variables:
 
-      ## MongoDB Atlas Setup
+| Variable | Value |
+|----------|-------|
+| `GOOGLE_GENAI_API_KEY` | Your Gemini API key |
+| `NEXT_PUBLIC_API_URL` | Your backend URL (after backend deployment) |
 
-      1. Go to https://cloud.mongodb.com
-      2. 2. Sign in / Create account
-         3. 3. Create a free tier cluster (M0)
-            4. 4. Click "Connect" and select "Connect your application"
-               5. 5. Copy the connection string: `mongodb+srv://username:password@cluster.mongodb.net/database`
-                  6. 6. Add to Render Environment as `MONGODB_URI`
-                    
-                     7. ## Google Gemini API Setup
-                    
-                     8. 1. Go to https://aistudio.google.com/app/api-keys
-                        2. 2. Click "Create API Key"
-                           3. 3. Select your project or create new
-                              4. 4. Copy the API key
-                                 5. 5. Add to Render Environment as `GOOGLE_GEMINI_API_KEY`
-                                   
-                                    6. ## Testing the Backend
-                                   
-                                    7. ### 1. Health Check
-                                    8. ```bash
-                                       curl https://<your-url>/health
-                                       ```
+### Step 4: Deploy
 
-                                       ### 2. Stats Endpoint
-                                       ```bash
-                                       curl https://<your-url>/api/stats
-                                       ```
+Click **Deploy**. Vercel will automatically deploy on every push to `main`.
 
-                                       ### 3. Demo Resumes (no auth needed)
-                                       ```bash
-                                       curl https://<your-url>/api/demo-resumes
-                                       ```
+---
 
-                                       ## Troubleshooting
+## Backend Deployment (Render)
 
-                                       ### "Backend unavailable" error on frontend
-                                       - Check Render service is running (green status)
-                                       - - Verify environment variables are set
-                                         - - Check MongoDB connection string is correct
-                                           - - Look at Render logs for errors
-                                            
-                                             - ### "MONGODB_URI not set" warning in logs
-                                             - - Go to Render Environment tab
-                                               - - Add/verify MONGODB_URI variable
-                                                 - - Redeploy service
-                                                  
-                                                   - ### "GOOGLE_GEMINI_API_KEY not set" warning
-                                                   - - Get API key from https://aistudio.google.com/app/api-keys
-                                                     - - Add to Render Environment
-                                                       - - Redeploy service
-                                                         - - Parser will fall back to regex until API key is set
-                                                          
-                                                           - ### Slow responses (>5 seconds)
-                                                           - - Likely free tier spindown happening
-                                                             - - Consider upgrading to paid plan
-                                                               - - Or ensure keep-alive interval is set to 25000ms
-                                                                
-                                                                 - ## Production Checklist
-                                                                
-                                                                 - - [ ] Backend running on Render (check status)
-                                                                   - [ ] - [ ] MongoDB Atlas cluster created and connected
-                                                                   - [ ] - [ ] Google Gemini API key obtained and configured
-                                                                   - [ ] - [ ] Environment variables all set in Render
-                                                                   - [ ] - [ ] Health endpoint responds within 2 seconds
-                                                                   - [ ] - [ ] Demo resumes endpoint working
-                                                                   - [ ] - [ ] Frontend successfully connects to backend
-                                                                   - [ ] - [ ] Parse endpoint accepts file uploads
-                                                                   - [ ] - [ ] Error handling working (try invalid file)
-                                                                  
-                                                                   - [ ] ## Performance Notes
-                                                                  
-                                                                   - [ ] - Free tier can handle ~100 concurrent requests
-                                                                   - [ ] - File size limit: 10MB (configurable)
-                                                                   - [ ] - Resume parsing: 2-5 seconds with Gemini API
-                                                                   - [ ] - Demo mode parsing: <500ms (no API call)
-                                                                  
-                                                                   - [ ] ## Next Steps
-                                                                  
-                                                                   - [ ] 1. Monitor Render logs regularly
-                                                                   - [ ] 2. Set up error tracking (optional: Sentry)
-                                                                   - [ ] 3. Track usage with /api/stats endpoint
-                                                                   - [ ] 4. Plan upgrade timeline if usage grows
+### Step 1: Create Web Service
+
+1. Go to [dashboard.render.com](https://dashboard.render.com/)
+2. Click **New** → **Web Service**
+3. Connect your GitHub repository
+
+### Step 2: Configure Build Settings
+
+| Setting | Value |
+|---------|-------|
+| **Name** | `ai-resume-parser-backend` |
+| **Region** | Choose closest to your users |
+| **Branch** | `main` |
+| **Root Directory** | `backend` |
+| **Runtime** | Node |
+| **Build Command** | `npm install` |
+| **Start Command** | `npm start` |
+
+### Step 3: Add Environment Variables
+
+| Variable | Value |
+|----------|-------|
+| `PORT` | `5000` |
+| `NODE_ENV` | `production` |
+| `GOOGLE_GEMINI_API_KEY` | Your Gemini API key |
+| `MONGODB_URI` | Your MongoDB connection string |
+| `CORS_WHITELIST` | Your Vercel frontend URL |
+| `MAX_FILE_SIZE` | `10485760` |
+
+### Step 4: Deploy
+
+Click **Create Web Service**. First deployment takes 5-10 minutes.
+
+---
+
+## Free Tier Considerations
+
+### Render Free Tier Limitations
+
+- Service sleeps after **15 minutes** of inactivity
+- First request after sleep takes **30-50 seconds**
+- Solution: Backend includes keep-alive mechanism (pings every 25 seconds)
+
+### Upgrade Option
+
+For production use, upgrade to Render Starter ($7/month):
+- No sleeping
+- Always responsive
+- Better performance
+
+---
+
+## MongoDB Setup
+
+1. Go to [cloud.mongodb.com](https://cloud.mongodb.com)
+2. Create free M0 cluster
+3. Click **Connect** → **Connect your application**
+4. Copy connection string
+5. Add to Render environment as `MONGODB_URI`
+
+> **Note**: Without MongoDB, resumes won't persist. The app works but data is lost on refresh.
+
+---
+
+## Post-Deployment Verification
+
+### 1. Check Backend Health
+
+```bash
+curl https://your-backend-url.onrender.com/health
+```
+
+Expected response:
+```json
+{
+  "status": "healthy",
+  "uptime": 123,
+  "mode": "production",
+  "database": "connected"
+}
+```
+
+### 2. Check Frontend
+
+1. Visit your Vercel URL
+2. Status indicator should show green/connected
+3. Try uploading a test resume
+
+### 3. Check Keep-Alive
+
+Monitor Render logs - you should see health check pings every 25 seconds.
+
+---
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Backend unavailable | Check Render service status |
+| CORS errors | Add frontend URL to `CORS_WHITELIST` |
+| AI not working | Verify `GOOGLE_GEMINI_API_KEY` |
+| Data not saving | Configure `MONGODB_URI` |
+| Slow first load | Normal for free tier (30-50s cold start) |
+
+---
+
+## Update Frontend After Backend Deploy
+
+After deploying backend, update Vercel:
+
+1. Copy your Render backend URL
+2. Go to Vercel → Settings → Environment Variables
+3. Set `NEXT_PUBLIC_API_URL` to your backend URL
+4. Redeploy the frontend
+
+---
+
+## Quick Reference
+
+### Commands
+
+```bash
+# Local development
+npm run dev              # Frontend (port 3000)
+cd backend && npm run dev # Backend (port 5000)
+
+# Production build
+npm run build            # Frontend
+cd backend && npm start  # Backend
+```
+
+### URLs
+
+| Service | Local | Production |
+|---------|-------|------------|
+| Frontend | http://localhost:3000 | https://your-app.vercel.app |
+| Backend | http://localhost:5000 | https://your-api.onrender.com |
+| Health Check | /health | /health |

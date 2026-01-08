@@ -11,6 +11,10 @@ require('dotenv').config();
 // Keep-alive mechanism to prevent Render free tier service from sleeping
 require('./keep-alive').startKeepAlive();
 
+// File cleanup to prevent disk space issues
+const { startAutoCleanup } = require('./utils/file-cleanup');
+startAutoCleanup(6); // Run cleanup every 6 hours
+
 const app = express();
 
 // ==================== CONFIGURATION ====================
@@ -20,9 +24,45 @@ const GEMINI_API_KEY = process.env.GOOGLE_GEMINI_API_KEY;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 // ==================== MIDDLEWARE ====================
-app.use(cors());
+// CORS Configuration with whitelist
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    // In development, allow all origins
+    if (process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
+
+    // In production, use whitelist from environment variable
+    const whitelist = process.env.CORS_WHITELIST
+      ? process.env.CORS_WHITELIST.split(',')
+      : ['https://ai-resume-parser-seven.vercel.app'];
+
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked origin: ${origin}`);
+      callback(null, true); // Allow for now, log warnings
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Rate limiting placeholder (add express-rate-limit package for production)
+// TODO: npm install express-rate-limit
+// const rateLimit = require('express-rate-limit');
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100 // limit each IP to 100 requests per windowMs
+// });
+// app.use('/api/', limiter);
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -136,10 +176,7 @@ const connectMongoDB = () => {
   }
 
   mongoose
-    .connect(MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    .connect(MONGODB_URI)
     .then(() => {
       console.log('✅ MongoDB Connected');
       mongoConnected = true;
@@ -198,7 +235,7 @@ async function parseWithGemini(text) {
             {
               parts: [
                 {
-                  text: `Parse this resume and extract structured information. Return JSON only with: { name, email, phone, linkedin, github, skills: [], experience: [], education: [], summary }. Resume:\n\n${text.substring(0, 4000)}`,
+                  text: `Parse this resume and extract structured information. Return JSON only with this exact structure: { name, email, phone, linkedin, github, skills: [], experience: [], education: [], summary }. Resume:\n\n${text}`,
                 },
               ],
             },
