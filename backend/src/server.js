@@ -8,6 +8,13 @@ const pdf = require('pdf-parse');
 const mammoth = require('mammoth');
 require('dotenv').config();
 
+// Import AI enhancement routes
+const aiEnhancementRoutes = require('./routes/ai-enhancement');
+
+// Import middleware
+const { apiLimiter, aiLimiter, uploadLimiter } = require('./middleware/rate-limiter');
+const { optionalAuth } = require('./middleware/auth');
+
 // Keep-alive mechanism to prevent Render free tier service from sleeping
 require('./keep-alive').startKeepAlive();
 
@@ -55,14 +62,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rate limiting placeholder (add express-rate-limit package for production)
-// TODO: npm install express-rate-limit
-// const rateLimit = require('express-rate-limit');
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 100 // limit each IP to 100 requests per windowMs
-// });
-// app.use('/api/', limiter);
+// Rate limiting - enabled for production
+app.use('/api/', apiLimiter);
+app.use('/api/ai/', aiLimiter);
+
+// Register AI enhancement routes
+app.use('/api/ai', aiEnhancementRoutes);
 
 // Request logging middleware
 app.use((req, res, next) => {
