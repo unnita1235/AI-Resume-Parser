@@ -15,9 +15,9 @@ services:
       - key: PORT
         value: 5000
       - key: GOOGLE_GEMINI_API_KEY
-        sync: false  # Set in dashboard for security
+        value: AIzaSyAK8y6jxPRJAatJBDkSIYTOg0wfff-LneQ
       - key: MONGODB_URI
-        sync: false  # Set in dashboard for security
+        sync: false  # Will default to empty -> Demo Mode
       - key: CORS_WHITELIST
         value: https://ai-resume-parser-seven.vercel.app
       - key: DEMO_MODE

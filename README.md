@@ -258,7 +258,7 @@ Content-Type: multipart/form-data
 4. Add environment variables
 5. Deploy
 
-> 📖 See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+> 📖 See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed instructions.
 
 ---
 
@@ -291,7 +291,7 @@ Content-Type: multipart/form-data
 | **Free-tier cold starts** | 30-50s delay after 15min inactivity | Upgrade to paid Render ($7/mo) |
 | **No MongoDB = No persistence** | Data lost on refresh | Set up MongoDB Atlas (free) |
 | **Gemini rate limits** | 60 requests/minute | Implement queuing for high traffic |
-| **No authentication** | Open API access | Add auth for production |
+| **API Key Auth** | Protected endpoints | Enabled via `VALID_API_KEYS` env var |
 
 ---
 
