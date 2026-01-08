@@ -20,6 +20,18 @@
 [API Reference](#-api-reference) •
 [Deployment](#-deployment)
 
+---
+
+## 📸 Screenshot
+
+<p align="center">
+  <img src="screenshots/app-screenshot.png" alt="AI Resume Parser Interface" width="800">
+</p>
+
+<p align="center">
+  <em>Split-panel interface with resume editor and live AI-powered preview</em>
+</p>
+
 </div>
 
 ---
