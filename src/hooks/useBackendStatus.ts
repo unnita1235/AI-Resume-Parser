@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { checkBackendHealth, BACKEND_API_URL } from "@/lib/api";
 
 export type ConnectionStatus = "connected" | "checking" | "disconnected";
 
@@ -12,6 +13,8 @@ interface BackendStatusState {
   error: string | null;
   lastChecked: Date | null;
   retryCount: number;
+  backendUrl: string;
+  backendMode?: string;
 }
 
 interface UseBackendStatusOptions {
@@ -45,8 +48,8 @@ const DEFAULT_OPTIONS: Required<UseBackendStatusOptions> = {
 };
 
 /**
- * Hook to monitor backend/API connectivity status
- * Checks the /api/health endpoint and manages connection state
+ * Hook to monitor Express backend connectivity status
+ * Checks the backend /health endpoint and manages connection state
  */
 export function useBackendStatus(options: UseBackendStatusOptions = {}) {
   const config = { ...DEFAULT_OPTIONS, ...options };
@@ -59,6 +62,7 @@ export function useBackendStatus(options: UseBackendStatusOptions = {}) {
     error: null,
     lastChecked: null,
     retryCount: 0,
+    backendUrl: BACKEND_API_URL,
   });
 
   const checkHealth = useCallback(async (): Promise<boolean> => {
@@ -69,23 +73,10 @@ export function useBackendStatus(options: UseBackendStatusOptions = {}) {
     }));
 
     try {
-      // Check local API health first
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      // Check Express backend health endpoint
+      const result = await checkBackendHealth();
 
-      const response = await fetch("/api/health", {
-        method: "GET",
-        signal: controller.signal,
-        headers: {
-          "Cache-Control": "no-cache",
-        },
-      });
-
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        const data = await response.json();
-
+      if (result.isHealthy) {
         setState({
           status: "connected",
           isConnected: true,
@@ -94,11 +85,13 @@ export function useBackendStatus(options: UseBackendStatusOptions = {}) {
           error: null,
           lastChecked: new Date(),
           retryCount: 0,
+          backendUrl: BACKEND_API_URL,
+          backendMode: result.mode,
         });
 
         return true;
       } else {
-        throw new Error(`Health check failed with status: ${response.status}`);
+        throw new Error(result.error || "Backend health check failed");
       }
     } catch (error) {
       const errorMessage =
@@ -112,6 +105,7 @@ export function useBackendStatus(options: UseBackendStatusOptions = {}) {
         error: errorMessage,
         lastChecked: new Date(),
         retryCount: prev.retryCount + 1,
+        backendUrl: BACKEND_API_URL,
       }));
 
       return false;

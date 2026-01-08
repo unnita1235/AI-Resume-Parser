@@ -24,10 +24,21 @@ const GEMINI_API_KEY = process.env.GOOGLE_GEMINI_API_KEY;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 // ==================== MIDDLEWARE ====================
+// Parse CORS whitelist from environment variable
+const parseWhitelist = () => {
+  const whitelist = process.env.CORS_WHITELIST
+    ? process.env.CORS_WHITELIST.split(',').map(url => url.trim())
+    : ['http://localhost:3000', 'https://ai-resume-parser-seven.vercel.app'];
+  console.log('📋 CORS Whitelist:', whitelist);
+  return whitelist;
+};
+
+const corsWhitelist = parseWhitelist();
+
 // CORS Configuration with whitelist
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps, curl, or same-origin requests)
     if (!origin) return callback(null, true);
 
     // In development, allow all origins
@@ -35,23 +46,27 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    // In production, use whitelist from environment variable
-    const whitelist = process.env.CORS_WHITELIST
-      ? process.env.CORS_WHITELIST.split(',')
-      : ['https://ai-resume-parser-seven.vercel.app'];
-
-    if (whitelist.indexOf(origin) !== -1) {
+    // In production, check against whitelist
+    if (corsWhitelist.includes(origin)) {
       callback(null, true);
     } else {
-      console.warn(`CORS blocked origin: ${origin}`);
-      callback(null, true); // Allow for now, log warnings
+      console.warn(`⚠️ CORS blocked origin: ${origin}`);
+      // For now, allow but log - change to callback(new Error('Not allowed by CORS')) to block
+      callback(null, true);
     }
   },
   credentials: true,
-  optionsSuccessStatus: 200
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Length', 'X-Request-Id'],
+  optionsSuccessStatus: 200,
+  maxAge: 86400 // Cache preflight for 24 hours
 };
 
 app.use(cors(corsOptions));
+
+// Explicit preflight handling for all routes
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
