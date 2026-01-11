@@ -110,29 +110,16 @@ Open http://localhost:3000
 ```
 AI-Resume-Parser/
 ├── src/
-│   ├── app/
-│   │   ├── page.tsx          # Main page
-│   │   ├── layout.tsx        # Root layout
-│   │   ├── api/              # API routes
-│   │   │   ├── parse/        # Resume parsing
-│   │   │   └── enhance/      # AI enhancement
-│   │   └── globals.css
-│   ├── components/
-│   │   ├── ResumeEditor.tsx  # Main editor
-│   │   ├── FileUpload.tsx    # Upload handler
-│   │   ├── PreviewPane.tsx   # Resume preview
-│   │   └── ui/               # shadcn/ui
-│   ├── lib/
-│   │   ├── ai.ts             # AI integration
-│   │   ├── parser.ts         # Parsing logic
-│   │   └── utils.ts
-│   └── types/
-│       └── resume.ts
-├── backend/                   # Express API (optional)
-│   ├── app.py
-│   └── requirements.txt
-├── .env.example
-└── README.md
+│   ├── app/              # Next.js App Router
+│   ├── components/       # React components + shadcn/ui
+│   ├── lib/              # Utilities
+│   ├── ai/               # Genkit AI integration
+│   ├── hooks/            # React hooks
+│   └── contexts/         # React contexts
+├── backend/              # Express.js API
+│   ├── src/              # Server source code
+│   └── __tests__/        # Jest tests
+└── public/               # Static assets
 ```
 
 ---
@@ -220,32 +207,6 @@ curl -X POST http://localhost:5000/api/parse \
 
 ---
 
-## Features Status
-
-✅ **Currently Working:**
-- Resume file upload (PDF, DOCX, TXT)
-- Text paste functionality
-- AI-powered enhancement
-- Real-time preview
-- Download functionality
-- Copy to clipboard
-- Responsive design
-
-🚧 **In Progress:**
-- User accounts
-- Resume templates
-- Version history
-- Advanced analytics
-
-📅 **Planned:**
-- Resume scoring system
-- Job-specific optimization
-- Cover letter generation
-- LinkedIn profile optimization
-- Multi-language support
-
----
-
 ## Development Scripts
 
 ```bash
@@ -306,17 +267,6 @@ npm run typecheck    # TypeScript check
 
 ---
 
-## Future Enhancements
-
-- Resume ATS score (percentage ranking)
-- Multiple resume templates
-- Job description keyword matching
-- Cover letter generation
-- Interview preparation tips
-- Export to multiple formats (DOCX, PDF)
-
----
-
 ## Contributing
 
 Contributions welcome! Please:
@@ -345,14 +295,7 @@ MIT License - See [LICENSE](LICENSE)
 
 ## Acknowledgments
 
-- Next.js team
-- Google Genkit
-- Vercel
-- shadcn/ui
-- Tailwind CSS
-
----
-
-**AI Resume Parser & Rewriter** - Helping Job Seekers Land Their Dream Jobs
-
-*Note: This project demonstrates AI integration with Google Gemini for practical resume enhancement. The current deployment showcases full functionality with AI-powered optimization.*
+- [Next.js](https://nextjs.org)
+- [Google Genkit](https://firebase.google.com/docs/genkit)
+- [shadcn/ui](https://ui.shadcn.com)
+- [Tailwind CSS](https://tailwindcss.com)
