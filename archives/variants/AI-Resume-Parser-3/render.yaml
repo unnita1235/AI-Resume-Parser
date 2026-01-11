@@ -1,0 +1,39 @@
+# Render.com Deployment Configuration
+# Documentation: https://render.com/docs/yaml-spec
+
+services:
+  - type: web
+    name: ai-resume-parser-backend
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: GOOGLE_GEMINI_API_KEY
+        value: AIzaSyAK8y6jxPRJAatJBDkSIYTOg0wfff-LneQ
+      - key: MONGODB_URI
+        sync: false  # Will default to empty -> Demo Mode
+      - key: CORS_WHITELIST
+        value: https://ai-resume-parser-seven.vercel.app
+      - key: DEMO_MODE
+        value: false
+      - key: UPLOAD_PATH
+        value: ./uploads
+      - key: MAX_FILE_SIZE
+        value: 10485760
+      - key: KEEP_ALIVE_INTERVAL
+        value: 25000
+    autoDeploy: true
+    healthCheckPath: /health
+    headers:
+      - path: /*
+        name: Access-Control-Allow-Origin
+        value: "*"
+      - path: /health
+        name: X-Health-Check
+        value: "true"

@@ -5,11 +5,11 @@ import { useState } from "react";
 import { runAdjustTone, runEnhanceActionVerbs, runOptimizeForAts } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { Wand2, Loader2, Lightbulb, ClipboardCopy, Upload, AlertTriangle, Info } from "lucide-react";
+import { Wand2, Loader2, Lightbulb, ClipboardCopy, Upload } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Label } from "./ui/label";
 import { Progress } from "./ui/progress";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
@@ -17,27 +17,18 @@ import { Textarea } from "./ui/textarea";
 import { FileUpload } from "./file-upload";
 import type { OptimizeForAtsOutput } from "@/ai/flows/optimize-for-ats";
 
-// Demo ATS result for offline mode
-const DEMO_ATS_RESULT: OptimizeForAtsOutput = {
-  atsCompatibilityScore: 78,
-  missingKeywords: ["Agile", "Scrum", "CI/CD", "REST APIs", "Microservices"],
-  recommendations: "Sample Output - Connect backend for real parsing\n\n1. Add more specific technical keywords related to the job description\n2. Include quantifiable achievements (e.g., 'increased efficiency by 25%')\n3. Use standard section headers (Experience, Education, Skills)\n4. Ensure consistent formatting throughout the document"
-};
-
 interface ResumeEditorProps {
   resumeText: string;
   setResumeText: Dispatch<SetStateAction<string>>;
-  isDemoMode?: boolean;
 }
 
-export function ResumeEditor({ resumeText, setResumeText, isDemoMode = false }: ResumeEditorProps) {
+export function ResumeEditor({ resumeText, setResumeText }: ResumeEditorProps) {
   const { toast } = useToast();
-
+  
   // ATS State
   const [jobDescription, setJobDescription] = useState("");
   const [atsResult, setAtsResult] = useState<OptimizeForAtsOutput | null>(null);
   const [isAtsLoading, setIsAtsLoading] = useState(false);
-  const [isUsingDemoData, setIsUsingDemoData] = useState(false);
 
   // Tone State
   const [tone, setTone] = useState<"formal" | "casual">("formal");
@@ -53,57 +44,23 @@ export function ResumeEditor({ resumeText, setResumeText, isDemoMode = false }: 
       toast({ title: "Please enter your resume content.", variant: "destructive" });
       return;
     }
-
     setIsAtsLoading(true);
     setAtsResult(null);
-    setIsUsingDemoData(false);
-
-    // In demo mode, show sample data after a brief delay
-    if (isDemoMode) {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setAtsResult(DEMO_ATS_RESULT);
-      setIsUsingDemoData(true);
-      setIsAtsLoading(false);
-      toast({
-        title: "Demo Mode",
-        description: "Showing sample ATS analysis. Connect backend for real results.",
-      });
-      return;
-    }
-
     try {
       const result = await runOptimizeForAts({ resumeText, jobDescription });
       setAtsResult(result);
-      toast({ title: "ATS Analysis Complete", description: `Score: ${result.atsCompatibilityScore}%` });
     } catch (error) {
-      // Fallback to demo data on error
-      setAtsResult(DEMO_ATS_RESULT);
-      setIsUsingDemoData(true);
-      toast({
-        title: "Using sample data",
-        description: "Backend unavailable. Showing sample output.",
-        variant: "destructive"
-      });
+      toast({ title: (error as Error).message, variant: "destructive" });
     } finally {
       setIsAtsLoading(false);
     }
   };
-
+  
   const handleAdjustTone = async () => {
     if (!resumeText) {
       toast({ title: "Please enter your resume content.", variant: "destructive" });
       return;
     }
-
-    if (isDemoMode) {
-      toast({
-        title: "Demo Mode",
-        description: "Tone adjustment requires backend connection.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setIsToneLoading(true);
     try {
       const { adjustedResume } = await runAdjustTone({ resume: resumeText, tone });
@@ -121,31 +78,13 @@ export function ResumeEditor({ resumeText, setResumeText, isDemoMode = false }: 
       toast({ title: "Please enter a bullet point.", variant: "destructive" });
       return;
     }
-
-    if (isDemoMode) {
-      // Provide demo suggestions
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setVerbSuggestions(["Spearheaded", "Orchestrated", "Pioneered"]);
-      toast({
-        title: "Demo Mode",
-        description: "Showing sample suggestions. Connect backend for real results.",
-      });
-      return;
-    }
-
     setIsVerbLoading(true);
     setVerbSuggestions([]);
     try {
       const { suggestions } = await runEnhanceActionVerbs({ bulletPoint });
       setVerbSuggestions(suggestions);
     } catch (error) {
-      // Fallback to demo suggestions
-      setVerbSuggestions(["Spearheaded", "Orchestrated", "Pioneered"]);
-      toast({
-        title: "Using sample suggestions",
-        description: "Backend unavailable. Showing sample output.",
-        variant: "destructive"
-      });
+      toast({ title: (error as Error).message, variant: "destructive" });
     } finally {
       setIsVerbLoading(false);
     }
@@ -168,10 +107,9 @@ export function ResumeEditor({ resumeText, setResumeText, isDemoMode = false }: 
           </div>
         </div>
         
-        <FileUpload
+        <FileUpload 
           onFileProcessed={(text) => setResumeText(text)}
           disabled={isAtsLoading || isToneLoading || isVerbLoading}
-          isDemoMode={isDemoMode}
         />
         
         <div className="relative">
@@ -196,18 +134,7 @@ export function ResumeEditor({ resumeText, setResumeText, isDemoMode = false }: 
           <CardTitle className="flex items-center gap-2">
             <Wand2 className="text-primary" />
             <span>AI Enhancement Tools</span>
-            {isDemoMode && (
-              <Badge variant="secondary" className="ml-auto text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30">
-                Demo Mode
-              </Badge>
-            )}
           </CardTitle>
-          {isDemoMode && (
-            <CardDescription className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400">
-              <AlertTriangle className="h-4 w-4" />
-              Some features limited without backend connection
-            </CardDescription>
-          )}
         </CardHeader>
         <CardContent>
           <Accordion type="single" collapsible className="w-full">
@@ -230,16 +157,6 @@ export function ResumeEditor({ resumeText, setResumeText, isDemoMode = false }: 
                 </Button>
                 {atsResult && (
                   <div className="mt-4 space-y-4 animate-in fade-in">
-                    {/* Demo Mode Warning */}
-                    {isUsingDemoData && (
-                      <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                        <Info className="h-4 w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
-                        <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                          <strong>Sample Output</strong> - Connect backend for real parsing
-                        </p>
-                      </div>
-                    )}
-
                     <div>
                       <Label>Compatibility Score: {atsResult.atsCompatibilityScore}%</Label>
                       <Progress value={atsResult.atsCompatibilityScore} className="w-full mt-1" />

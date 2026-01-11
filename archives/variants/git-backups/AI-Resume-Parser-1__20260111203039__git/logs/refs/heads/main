@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 54198e610bdf88a188f48fc3dd73f1674fee3bc2 Unni T A <unnita1235@gmail.com> 1767817016 +0530	clone: from https://github.com/unnita1235/AI-Resume-Parser.git
+54198e610bdf88a188f48fc3dd73f1674fee3bc2 f164262309d2a74bc9b162a9b31f53f4e9503bed Unni T A <unnita1235@gmail.com> 1767817590 +0530	commit: fix: resolve backend deployment errors - Fix corrupted Dockerfile markdown remnants - Fix escape sequence corruption in server.js regex patterns - Fix keep-alive health check endpoint path (/health instead of /api/health) - Add .dockerignore file

@@ -18,8 +18,6 @@ import {
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { StatusIndicator } from "./StatusIndicator";
-import { useBackendStatus } from "@/hooks/useBackendStatus";
 
 interface HeaderProps {
   resumeText?: string;
@@ -37,7 +35,6 @@ export function Header({ resumeText, onReset }: HeaderProps) {
   const pathname = usePathname();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const backendStatus = useBackendStatus();
 
   // Initialize dark mode from localStorage or system preference
   useEffect(() => {
@@ -136,17 +133,6 @@ export function Header({ resumeText, onReset }: HeaderProps) {
 
       {/* Actions */}
       <div className="flex items-center gap-2">
-        {/* Connection Status Indicator */}
-        <StatusIndicator
-          status={backendStatus.status}
-          isChecking={backendStatus.isChecking}
-          error={backendStatus.error}
-          lastChecked={backendStatus.lastChecked}
-          onRetry={backendStatus.retry}
-          showLabel={false}
-          className="hidden sm:flex"
-        />
-
         {/* Dark Mode Toggle */}
         <Button
           onClick={toggleDarkMode}
@@ -201,19 +187,6 @@ export function Header({ resumeText, onReset }: HeaderProps) {
       {mobileMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-card border-b shadow-lg md:hidden animate-in slide-in-from-top-2">
           <nav className="flex flex-col p-4 gap-2">
-            {/* Mobile Status Indicator */}
-            <div className="flex items-center justify-between py-2 px-3 bg-muted/50 rounded-md mb-2">
-              <span className="text-sm text-muted-foreground">Connection Status</span>
-              <StatusIndicator
-                status={backendStatus.status}
-                isChecking={backendStatus.isChecking}
-                error={backendStatus.error}
-                lastChecked={backendStatus.lastChecked}
-                onRetry={backendStatus.retry}
-                showLabel={true}
-              />
-            </div>
-
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;

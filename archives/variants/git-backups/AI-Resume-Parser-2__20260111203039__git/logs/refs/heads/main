@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 f164262309d2a74bc9b162a9b31f53f4e9503bed Unni T A <unnita1235@gmail.com> 1767855829 +0530	clone: from https://github.com/unnita1235/AI-Resume-Parser.git
+f164262309d2a74bc9b162a9b31f53f4e9503bed e72a6474aa60ea782b1a853bb6329557078903f6 Unni T A <unnita1235@gmail.com> 1767857210 +0530	commit: refactor: Clean up repository and improve documentation
+e72a6474aa60ea782b1a853bb6329557078903f6 899f244713727b2420f29b88459221e82300aed4 Unni T A <unnita1235@gmail.com> 1767857483 +0530	commit: docs: Add live app screenshot to README
+899f244713727b2420f29b88459221e82300aed4 c68b23d0194eb3cd7abca22f0c86b0770e92e1ee Unni T A <unnita1235@gmail.com> 1767857702 +0530	revert: Revert "docs: Add live app screenshot to README"
+c68b23d0194eb3cd7abca22f0c86b0770e92e1ee 92b4a381bd6c6e79195c5f9f4e21bde9fad74a92 Unni T A <unnita1235@gmail.com> 1767857923 +0530	commit: docs: Add live app screenshot to README

@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // PDF and DOCX extraction libraries
-import mammoth from 'mammoth';
-
-// pdf-parse needs to be imported differently as it's a CommonJS module
 // @ts-ignore - pdf-parse types not available
-const pdfParse = require('pdf-parse');
+import pdfParse from 'pdf-parse';
+// @ts-ignore - mammoth types not available  
+import mammoth from 'mammoth';
 
 /**
  * POST /api/extract-text
