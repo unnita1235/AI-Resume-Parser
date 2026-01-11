@@ -6,10 +6,11 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm ci
 
-# Copy source code
+# Copy source code and environment
 COPY src ./src
+COPY .env* ./
 
 # Create uploads directory
 RUN mkdir -p uploads
@@ -21,3 +22,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 EXPOSE 5000
 
 CMD ["npm", "start"]
+

@@ -1,6 +1,16 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+  ],
+};
 
 export const metadata: Metadata = {
   title: 'AI Resume Parser & Rewriter | Optimize Your Resume with AI',
@@ -10,6 +20,7 @@ export const metadata: Metadata = {
   creator: 'Unni T A',
   publisher: 'Unni T A',
   robots: 'index, follow',
+  metadataBase: new URL('https://ai-resume-parser-seven.vercel.app'),
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -32,15 +43,6 @@ export const metadata: Metadata = {
     description: 'Transform your resume with AI-powered optimization. Get ATS-friendly formatting and personalized cover letters.',
     images: ['/screenshots/AI-Resume-Parser.png'],
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
-  ],
   manifest: '/manifest.json',
   icons: {
     icon: '/favicon.ico',

@@ -15,8 +15,8 @@ export async function GET() {
     version: "1.0.0",
   };
 
-  // Check if Google AI API key is configured
-  const hasAiKey = !!process.env.GOOGLE_GENAI_API_KEY;
+  // Check if Google AI API key is configured (same keys as geminiClient.ts)
+  const hasAiKey = !!( process.env.GOOGLE_GEMINI_API_KEY || process.env.GOOGLE_AI_API_KEY);
 
   if (hasAiKey) {
     healthStatus.services = {

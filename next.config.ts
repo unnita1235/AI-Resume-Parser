@@ -8,6 +8,17 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  webpack: (config, { isServer }) => {
+    // Suppress handlebars/dotprompt webpack warnings from Genkit
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      {
+        module: /handlebars/,
+        message: /require\.extensions is not supported by webpack/,
+      },
+    ];
+    return config;
+  },
   images: {
     remotePatterns: [
       {

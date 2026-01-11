@@ -1,60 +1,46 @@
 # Copilot / AI Agent Instructions (short & actionable)
 
-## Purpose
-Help an AI coding agent be productive quickly: where AI logic lives, how to run and test locally, project-specific conventions, and typical integration points.
+## Big picture (what lives where) ✅
+- Frontend: Next.js 15 App Router in `src/app` (TypeScript + Tailwind + shadcn/ui). UI uses server actions and calls local API routes.
+- AI: Genkit config in `src/ai/genkit.ts` (plugin `@genkit-ai/googleai`, model `googleai/gemini-2.5-flash`). Flows are in `src/ai/flows/*` and imported by `src/ai/dev.ts` for the Genkit dev harness.
+- API: Next API routes in `src/app/api/**/route.ts` (e.g., `ai/ats-optimize`, `ai/tone-adjust`, `extract-text`, `health`). These wrap Gemini via `src/lib/geminiClient.ts` and handle file/text inputs.
+- Backend (optional): Express + MongoDB service in `backend/src/server.js` for resume storage and parsing endpoints (`/api/parse`, `/api/resumes`), plus a Python parser at `backend/python_parser/parser.py`.
+- Deployment: Vercel (frontend). Dockerfiles: `src/Dockerfile` (Next) and `backend/Dockerfile` (Express).
 
----
+## Run & test locally 🔧
+- Install: `npm install` (root). For Python parser: `pip install -r backend/python_parser/requirements.txt`.
+- Env: copy `.env.example` → `.env.local`. Set one of: `GOOGLE_GEMINI_API_KEY` or `GOOGLE_AI_API_KEY`. For backend calls, set `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:5000`). See `SETUP.md`.
+- Start Next: `npm run dev` (http://localhost:3000). Genkit harness: `npm run genkit:dev` (or `genkit:watch`).
+- Tests: `npm test` (Vitest, see `src/__tests__`). Backend tests: `cd backend && npm test` (Jest). Python tests: `pytest -q`.
+- Preview build: `npm run preview` (`next build && next start`).
 
-## Big picture (quick) ✅
-- Frontend: Next.js App Router in `src/app` (TypeScript + Tailwind). Run with `npm run dev`.
-- AI: Genkit configuration in `src/ai/genkit.ts` (uses `@genkit-ai/googleai`). Flows live in `src/ai/flows/*` and are exported server functions used by UI.
-- Backend: Simple Python text parser at `backend/python_parser/parser.py` (spaCy + PyPDF2) and Node API routes under `src/app/api`.
-- Deployment: Vercel for frontend; Docker files exist in `src/Dockerfile` and `backend/Dockerfile` for containerized builds.
+## AI flow conventions 🧭
+- Each flow: `use server` at top, Zod schemas for input/output, prompt via `ai.definePrompt`, wrapper via `ai.defineFlow` returning typed data.
+- Example: `src/ai/flows/optimize-for-ats.ts` defines `OptimizeForAtsInput/Output`, `optimizeForAtsPrompt`, and `optimizeForAtsFlow`.
+- After adding a flow, import it in `src/ai/dev.ts` so the dev harness picks it up.
 
----
+## API route patterns (Next.js) 🧩
+- Use `export async function POST/GET` in `route.ts` with `NextResponse.json(...)`.
+- Validate inputs and return a consistent shape: `{ success: boolean, ... }`.
+- Examples:
+  - `src/app/api/ai/ats-optimize/route.ts` expects `{ resumeText, jobDescription? }` and returns `{ score, missingKeywords, recommendations, issues, strengths }`.
+  - `src/app/api/ai/tone-adjust/route.ts` expects `{ text, tone: 'formal'|'casual' }` and returns `{ adjustedText, summary, originalTone, targetTone }`.
+  - `src/app/api/extract-text/route.ts` accepts `FormData(file)` for PDF/DOCX/TXT, enforces 5MB limit, and returns `{ text, metadata }`.
 
-## How to run & test locally 🔧
-- Install deps: `npm install` (root) and `pip install -r backend/python_parser/requirements.txt` (if working with Python parser).
-- Environment: copy `.env.example` → `.env.local` and set `GOOGLE_AI_API_KEY` (see `SETUP.md`).
-- Start app: `npm run dev` (Next dev server on `http://localhost:3000`).
-- Run Genkit dev harness for AI prompt debugging: `npm run genkit:dev` (or `npm run genkit:watch`).
-- Frontend tests: `cd frontend && npm test` (CRA test runner). Python tests: `pytest -q` (CI defined in `src/app/.github/workflows/python-ci.yml`).
-- Build preview: `npm run preview` (runs `next build && next start`).
+## Integration notes 🔐
+- Gemini REST wrapper: `src/lib/geminiClient.ts` reads `GOOGLE_GEMINI_API_KEY` or `GOOGLE_AI_API_KEY` (either works). Do not hardcode secrets.
+- Health check route uses `process.env.GOOGLE_GENAI_API_KEY`; prefer the keys above and align if needed.
+- Frontend API client: `src/lib/api-client.ts` targets `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:5000`) for backend endpoints.
 
----
-
-## AI flow conventions you must follow 🧭
-- Flows live in `src/ai/flows/*.ts` and follow this pattern:
-  - Define input/output Zod schema (use `z.object` from `genkit`).
-  - Create a prompt with `ai.definePrompt({ input, output, prompt })`.
-  - Wrap in `ai.defineFlow(...)` and export a typed function used by server actions.
-  - Example: `src/ai/flows/optimize-for-ats.ts` (see `OptimizeForAtsInput/Output`, `prompt`, `optimizeForAtsFlow`).
-- Files intended for server execution include the top-line `use server` directive.
-- TypeScript types should mirror Zod schemas (export `type FooInput = z.infer<typeof FooInputSchema>`).
-- Keep prompt text inside `ai.definePrompt` (helps prompt-tracking and testability).
-
----
-
-## Model & credential notes 🔐
-- Model config is in `src/ai/genkit.ts` (`model: 'googleai/gemini-2.5-flash'`). Change there to switch models or add plugins.
-- API key: set `GOOGLE_AI_API_KEY` in `.env.local`. Do NOT hardcode secrets into files.
-
----
-
-## Integration & debugging tips 🐞
-- To debug prompt responses locally, run `npm run genkit:dev` and check the console for request/response logs.
-- When adding a new flow, import it in `src/ai/dev.ts` so it’s picked up by the genkit dev harness.
-- For frontend/API issues, check Next server logs when running `npm run dev`.
-- For parsing issues, run the Python parser directly or run `pytest -q` to run repository tests.
-
----
+## Debugging tips 🐞
+- AI prompts/responses: run `npm run genkit:dev` and watch logs.
+- API issues: check Next dev server logs and test routes under `src/app/api/**`.
+- File parsing: verify MIME/size in `extract-text` and use sample files in `src/tests`.
+- Backend service: verify `/health`, `/api/parse` on port 5000; set `MONGODB_URI` and `UPLOAD_PATH` if using Express.
 
 ## PR checklist for AI changes ✅
-- Add/adjust Zod schemas and export corresponding TypeScript types.
-- Include example inputs/expected outputs in unit tests (where applicable).
-- Update `SETUP.md` if new env vars are required.
-- Keep prompt changes small & test locally with `genkit:dev`.
+- Define Zod schemas + export `type` via `z.infer`, keep prompts inside `ai.definePrompt`.
+- Import new flows in `src/ai/dev.ts` and add unit tests (`src/__tests__`, `backend/__tests__`).
+- Update `SETUP.md` if env vars change; keep diffs small and verify with `genkit:dev`.
 
----
-
-If anything is unclear or you want extra examples (sample tests, a standard prompt template, or a checklist for reviewing prompt quality), tell me which area to expand and I’ll iterate. ✨
+Questions or unclear areas? If the Express backend is optional in your environment or if `GOOGLE_GENAI_API_KEY` should be standardized, tell me and I’ll refine these notes. ✨

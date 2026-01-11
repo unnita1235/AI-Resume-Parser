@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // PDF and DOCX extraction libraries
 // @ts-ignore - pdf-parse types not available
-import pdfParse from 'pdf-parse';
+import * as pdfParse from 'pdf-parse';
 // @ts-ignore - mammoth types not available  
 import mammoth from 'mammoth';
 
@@ -119,7 +119,8 @@ export async function POST(request: NextRequest) {
  */
 async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   try {
-    const data = await pdfParse(buffer, {
+    const { default: pdf } = pdfParse;
+    const data = await pdf(buffer, {
       // Disable test data
       max: 0
     });
