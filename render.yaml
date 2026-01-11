@@ -1,5 +1,8 @@
 # Render.com Deployment Configuration
 # Documentation: https://render.com/docs/yaml-spec
+#
+# SECURITY NOTE: Never commit API keys to this file.
+# Use Render's Dashboard to set sensitive environment variables.
 
 services:
   - type: web
@@ -15,9 +18,9 @@ services:
       - key: PORT
         value: 5000
       - key: GOOGLE_GEMINI_API_KEY
-        value: AIzaSyAK8y6jxPRJAatJBDkSIYTOg0wfff-LneQ
+        sync: false  # Set via Render Dashboard - NEVER commit API keys
       - key: MONGODB_URI
-        sync: false  # Will default to empty -> Demo Mode
+        sync: false  # Set via Render Dashboard
       - key: CORS_WHITELIST
         value: https://ai-resume-parser-seven.vercel.app
       - key: DEMO_MODE
@@ -32,8 +35,11 @@ services:
     healthCheckPath: /health
     headers:
       - path: /*
-        name: Access-Control-Allow-Origin
-        value: "*"
+        name: X-Content-Type-Options
+        value: "nosniff"
+      - path: /*
+        name: X-Frame-Options
+        value: "DENY"
       - path: /health
         name: X-Health-Check
         value: "true"

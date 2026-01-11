@@ -59,8 +59,22 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// Security headers middleware
+app.use((req, res, next) => {
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+  next();
+});
+
+app.use(express.json({ limit: '1mb' })); // Limit JSON body size
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Rate limiting - enabled for production
 app.use('/api/', apiLimiter);
@@ -131,7 +145,11 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
+    // Generate safe filename to prevent path traversal attacks
+    // Only use the extension from original filename, not the full name
+    const safeExt = path.extname(file.originalname).toLowerCase().replace(/[^a-z0-9.]/g, '');
+    const safeFilename = Date.now() + '-' + Math.random().toString(36).substring(2, 9) + safeExt;
+    cb(null, safeFilename);
   },
 });
 
@@ -640,13 +658,18 @@ app.get('/api/resumes', async (req, res) => {
       });
     }
 
-    const limit = parseInt(req.query.limit) || 50;
-    const skip = parseInt(req.query.skip) || 0;
+    // Validate and sanitize pagination parameters
+    const rawLimit = parseInt(req.query.limit);
+    const rawSkip = parseInt(req.query.skip);
+    const limit = Math.min(Math.max(isNaN(rawLimit) ? 50 : rawLimit, 1), 100); // Max 100
+    const skip = Math.max(isNaN(rawSkip) ? 0 : rawSkip, 0); // Min 0
 
     const resumes = await Resume.find()
+      .select('-rawText') // Exclude large field for performance
       .sort({ uploadDate: -1 })
       .limit(limit)
-      .skip(skip);
+      .skip(skip)
+      .lean(); // Return plain objects for better performance
 
     const total = await Resume.countDocuments();
 
@@ -675,6 +698,14 @@ app.get('/api/resumes/:id', async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Database not available',
+      });
+    }
+
+    // Validate ObjectId format to prevent injection
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid resume ID format',
       });
     }
 
