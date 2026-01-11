@@ -344,9 +344,18 @@ function parseWithRegex(text) {
   const linkedinMatch = text.match(linkedinRegex);
   const githubMatch = text.match(githubRegex);
 
+  // Helper function to escape special regex characters
+  const escapeRegex = (str) => {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  };
+
   const foundSkills = [];
   skillsKeywords.forEach((skill) => {
-    if (new RegExp(`\\b${skill}\\b`, 'i').test(text)) {
+    // Escape special characters for regex (C++, C#, Node.js, Vue.js)
+    const escapedSkill = escapeRegex(skill);
+    // Use flexible pattern matching with word boundaries or common delimiters
+    const pattern = new RegExp(`(^|\\s|,)\\s*${escapedSkill}\\s*($|\\s|,)`, 'i');
+    if (pattern.test(text)) {
       foundSkills.push(skill);
     }
   });

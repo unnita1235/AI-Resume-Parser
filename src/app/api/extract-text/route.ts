@@ -3,10 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 // PDF and DOCX extraction libraries
 import mammoth from 'mammoth';
 
-// pdf-parse needs to be imported differently as it's a CommonJS module
-// @ts-ignore - pdf-parse types not available
-const pdfParse = require('pdf-parse');
-
 /**
  * POST /api/extract-text
  * 
@@ -120,6 +116,9 @@ export async function POST(request: NextRequest) {
  */
 async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   try {
+    // Dynamic import to avoid issues with Next.js server-side rendering
+    // @ts-ignore - pdf-parse types not available
+    const pdfParse = require('pdf-parse');
     const data = await pdfParse(buffer, {
       // Disable test data
       max: 0
