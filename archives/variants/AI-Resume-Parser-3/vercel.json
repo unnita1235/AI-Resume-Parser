@@ -1,0 +1,43 @@
+{
+    "version": 2,
+    "framework": "nextjs",
+    "buildCommand": "npm run build",
+    "devCommand": "npm run dev",
+    "outputDirectory": ".next",
+    "installCommand": "npm install",
+    "env": {
+        "NEXT_PUBLIC_API_URL": "@api_url"
+    },
+    "headers": [
+        {
+            "source": "/api/(.*)",
+            "headers": [
+                {
+                    "key": "Access-Control-Allow-Credentials",
+                    "value": "true"
+                },
+                {
+                    "key": "Access-Control-Allow-Origin",
+                    "value": "*"
+                },
+                {
+                    "key": "Access-Control-Allow-Methods",
+                    "value": "GET,OPTIONS,POST,PUT,DELETE"
+                },
+                {
+                    "key": "Access-Control-Allow-Headers",
+                    "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-API-Key"
+                }
+            ]
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/backend/:path*",
+            "destination": "https://ai-resume-parser-backend.onrender.com/:path*"
+        }
+    ],
+    "regions": [
+        "iad1"
+    ]
+}
