@@ -349,7 +349,8 @@ function parseWithRegex(text) {
     // Escape special regex characters in skill name
     const escapedSkill = skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     // Use word boundaries or punctuation boundaries to match skills
-    if (new RegExp(`(^|\\s|,)${escapedSkill}($|\\s|,)`, 'i').test(text)) {
+    // Match skills at start/end of text or surrounded by whitespace/punctuation
+    if (new RegExp(`(^|[\\s,;.()!?-])${escapedSkill}($|[\\s,;.()!?-])`, 'i').test(text)) {
       foundSkills.push(skill);
     }
   });
