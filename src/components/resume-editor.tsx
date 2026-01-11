@@ -230,13 +230,19 @@ export function ResumeEditor({ resumeText, setResumeText, isDemoMode = false }: 
                 </Button>
                 {atsResult && (
                   <div className="mt-4 space-y-4 animate-in fade-in">
-                    {/* Demo Mode Warning */}
+                    {/* Demo Mode Warning - More prominent */}
                     {isUsingDemoData && (
-                      <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                        <Info className="h-4 w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
-                        <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                          <strong>Sample Output</strong> - Connect backend for real parsing
-                        </p>
+                      <div className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-400 dark:border-amber-600 rounded-lg">
+                        <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                        <div className="space-y-1">
+                          <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">
+                            Demo Data - Not Real Results
+                          </p>
+                          <p className="text-xs text-amber-700 dark:text-amber-300">
+                            Backend is unavailable. The results shown below are sample data for demonstration only.
+                            Do not use these results for your actual resume. Connect to the backend for real AI analysis.
+                          </p>
+                        </div>
                       </div>
                     )}
 
@@ -304,14 +310,20 @@ export function ResumeEditor({ resumeText, setResumeText, isDemoMode = false }: 
                   <div className="mt-4 space-y-2 animate-in fade-in">
                     <h4 className="font-semibold flex items-center gap-2"><Lightbulb className="w-4 h-4 text-yellow-500" /> Suggestions</h4>
                     <ul className="space-y-2">
-                      {verbSuggestions.map((suggestion) => (
-                        <li key={suggestion} className="flex items-center justify-between text-sm p-2 bg-muted rounded-md">
-                           <span>{bulletPoint.replace(/^\s*[\w-]+/, `<strong>${suggestion}</strong>`)}</span>
-                          <Button size="icon" variant="ghost" onClick={() => copySuggestion(suggestion)} title="Copy Suggestion">
-                            <ClipboardCopy className="w-4 h-4" />
-                          </Button>
-                        </li>
-                      ))}
+                      {verbSuggestions.map((suggestion) => {
+                        // Safely render suggestion without HTML injection
+                        const restOfBullet = bulletPoint.replace(/^\s*[\w-]+\s*/, '');
+                        return (
+                          <li key={suggestion} className="flex items-center justify-between text-sm p-2 bg-muted rounded-md">
+                            <span>
+                              <strong className="text-primary">{suggestion}</strong> {restOfBullet}
+                            </span>
+                            <Button size="icon" variant="ghost" onClick={() => copySuggestion(suggestion)} title="Copy Suggestion">
+                              <ClipboardCopy className="w-4 h-4" />
+                            </Button>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}

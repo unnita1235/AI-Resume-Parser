@@ -3,9 +3,41 @@ import { NextRequest, NextResponse } from 'next/server';
 // PDF and DOCX extraction libraries
 import mammoth from 'mammoth';
 
-// pdf-parse needs to be imported differently as it's a CommonJS module
-// @ts-ignore - pdf-parse types not available
-const pdfParse = require('pdf-parse');
+// pdf-parse needs dynamic import for CommonJS compatibility
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const pdfParse = require('pdf-parse') as (buffer: Buffer, options?: { max?: number }) => Promise<{ text: string }>;
+
+/**
+ * Validates file content by checking magic bytes (file signature)
+ * This prevents users from renaming malicious files to bypass extension checks
+ */
+function validateFileContent(buffer: Buffer, fileName: string): { valid: boolean; detectedType: string } {
+  const ext = fileName.toLowerCase().split('.').pop();
+
+  // PDF files start with %PDF
+  if (ext === 'pdf') {
+    const header = buffer.slice(0, 4).toString('ascii');
+    if (header === '%PDF') {
+      return { valid: true, detectedType: 'pdf' };
+    }
+    return { valid: false, detectedType: 'unknown' };
+  }
+
+  // DOCX files are ZIP format, start with PK (0x50 0x4B)
+  if (ext === 'docx') {
+    if (buffer[0] === 0x50 && buffer[1] === 0x4B) {
+      return { valid: true, detectedType: 'docx' };
+    }
+    return { valid: false, detectedType: 'unknown' };
+  }
+
+  // TXT files - accept without validation (any content is valid text)
+  if (ext === 'txt') {
+    return { valid: true, detectedType: 'txt' };
+  }
+
+  return { valid: false, detectedType: 'unknown' };
+}
 
 /**
  * POST /api/extract-text
@@ -46,8 +78,22 @@ export async function POST(request: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Validate file content matches extension (security check)
+    const validation = validateFileContent(buffer, file.name);
+    if (!validation.valid) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Invalid file content',
+          message: 'File content does not match the file extension. Please upload a valid PDF, DOCX, or TXT file.'
+        },
+        { status: 400 }
+      );
+    }
+
     let extractedText = '';
-    let metadata = {
+    const metadata = {
       fileName: file.name,
       fileSize: file.size,
       fileType: file.type,

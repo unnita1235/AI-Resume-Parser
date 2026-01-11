@@ -1,11 +1,19 @@
 /**
  * API Client for AI Resume Parser
- * 
+ *
  * This module provides type-safe functions for communicating with the backend API.
  * All functions include comprehensive error handling, timeout support, and proper typing.
- * 
+ * Uses Zod for runtime validation of API responses.
+ *
  * @module api-client
  */
+
+import {
+  ParseResponseSchema,
+  HealthCheckResponseSchema,
+  StatsResponseSchema,
+  safeValidate,
+} from './schemas';
 
 // ==================== CONFIGURATION ====================
 
@@ -104,12 +112,13 @@ export interface CoverLetterResult {
  * Health check response
  */
 export interface HealthCheckResponse {
-  status: 'healthy' | 'unhealthy';
+  status: 'healthy' | 'unhealthy' | 'degraded';
   timestamp: string;
-  uptime: number;
-  mode: string;
-  database: string;
+  uptime?: number;
+  mode?: string;
+  database?: string;
   version: string;
+  services?: Record<string, string>;
 }
 
 /**
@@ -234,9 +243,9 @@ export async function parseResume(file: File, apiKey?: string): Promise<ParseRes
     });
     
     cleanup();
-    
+
     const data = await response.json();
-    
+
     if (!response.ok) {
       return {
         success: false,
@@ -245,8 +254,19 @@ export async function parseResume(file: File, apiKey?: string): Promise<ParseRes
         error: data.error || `HTTP ${response.status}`,
       };
     }
-    
-    return data as ParseResponse;
+
+    // Validate response with Zod schema
+    const validated = safeValidate(ParseResponseSchema, data, {
+      success: false,
+      data: {} as ParsedResumeData,
+      message: 'Invalid response format from server',
+    });
+
+    if (!validated.isValid) {
+      console.warn('[parseResume] Response validation failed:', validated.error);
+    }
+
+    return validated.data;
   } catch (error) {
     cleanup();
     const apiError = handleFetchError(error, 'Resume parsing');
@@ -506,18 +526,29 @@ export async function checkHealth(): Promise<HealthCheckResponse> {
     
     cleanup();
     
+    const fallbackResponse: HealthCheckResponse = {
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      uptime: 0,
+      mode: 'unknown',
+      database: 'unknown',
+      version: 'unknown',
+    };
+
     if (!response.ok) {
-      return {
-        status: 'unhealthy',
-        timestamp: new Date().toISOString(),
-        uptime: 0,
-        mode: 'unknown',
-        database: 'unknown',
-        version: 'unknown',
-      };
+      return fallbackResponse;
     }
-    
-    return await response.json() as HealthCheckResponse;
+
+    const data = await response.json();
+
+    // Validate response with Zod schema
+    const validated = safeValidate(HealthCheckResponseSchema, data, fallbackResponse);
+
+    if (!validated.isValid) {
+      console.warn('[checkHealth] Response validation failed:', validated.error);
+    }
+
+    return validated.data;
   } catch (error) {
     cleanup();
     return {
