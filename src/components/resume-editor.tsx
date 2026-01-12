@@ -4,7 +4,6 @@ import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { runAdjustTone, runEnhanceActionVerbs, runOptimizeForAts } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 import { Wand2, Loader2, Lightbulb, ClipboardCopy, Upload } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Badge } from "./ui/badge";
