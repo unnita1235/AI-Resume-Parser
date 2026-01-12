@@ -59,7 +59,7 @@ export function Header({ resumeText, onReset }: HeaderProps) {
   };
 
   const handleDownload = () => {
-    window.print();
+    globalThis.print?.();
   };
 
   const handleCopyResume = () => {
