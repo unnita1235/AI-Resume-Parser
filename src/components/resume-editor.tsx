@@ -17,8 +17,8 @@ import { FileUpload } from "./file-upload";
 import type { OptimizeForAtsOutput } from "@/ai/flows/optimize-for-ats";
 
 interface ResumeEditorProps {
-  resumeText: string;
-  setResumeText: Dispatch<SetStateAction<string>>;
+  readonly resumeText: string;
+  readonly setResumeText: Dispatch<SetStateAction<string>>;
 }
 
 export function ResumeEditor({ resumeText, setResumeText }: ResumeEditorProps) {
