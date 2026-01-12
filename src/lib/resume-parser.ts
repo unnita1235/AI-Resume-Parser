@@ -16,6 +16,32 @@ export interface ParsedResume {
   sections: ResumeSection[];
 }
 
+function isSectionHeader(trimmedLine: string): boolean {
+  return trimmedLine.startsWith('[') && trimmedLine.endsWith(']');
+}
+
+function isBulletPoint(trimmedLine: string): boolean {
+  return trimmedLine.startsWith('- ');
+}
+
+function extractSubtitles(entries: ResumeEntry[]): ResumeEntry[] {
+  const tempEntries: ResumeEntry[] = [];
+  let i = 0;
+  while (i < entries.length) {
+    const entry = entries[i];
+    if (i + 1 < entries.length) {
+      const nextEntry = entries[i + 1];
+      if (!nextEntry.date && nextEntry.details.length === 0) {
+        entry.subtitle = nextEntry.title;
+        i++;
+      }
+    }
+    tempEntries.push(entry);
+    i++;
+  }
+  return tempEntries;
+}
+
 export function parseResume(text: string): ParsedResume {
   const lines = text.split('\n').filter(line => line.trim() !== '');
   
@@ -34,7 +60,7 @@ export function parseResume(text: string): ParsedResume {
     const trimmedLine = line.trim();
     
     // Check for section headers (e.g., [EXPERIENCE])
-    if (trimmedLine.startsWith('[') && trimmedLine.endsWith(']')) {
+    if (isSectionHeader(trimmedLine)) {
       if (currentSection) {
         if(currentEntry) {
           currentSection.entries.push(currentEntry);
@@ -51,7 +77,7 @@ export function parseResume(text: string): ParsedResume {
 
     if (!currentSection) return;
 
-    if (trimmedLine.startsWith('- ')) { // Bullet point
+    if (isBulletPoint(trimmedLine)) {
       if (!currentEntry) {
          currentEntry = { title: "Details", details: [] };
       }
@@ -85,21 +111,7 @@ export function parseResume(text: string): ParsedResume {
   // A special pass for EXPERIENCE and EDUCATION to find subtitles
   sections.forEach(section => {
     if (section.title.toUpperCase() === 'EXPERIENCE' || section.title.toUpperCase() === 'EDUCATION') {
-      const tempEntries: ResumeEntry[] = [];
-      let i = 0;
-      while(i < section.entries.length) {
-        const entry = section.entries[i];
-        if (i + 1 < section.entries.length) {
-            const nextEntry = section.entries[i+1];
-            if(!nextEntry.date && nextEntry.details.length === 0) {
-                entry.subtitle = nextEntry.title;
-                i++; // consume next entry as subtitle
-            }
-        }
-        tempEntries.push(entry);
-        i++;
-      }
-      section.entries = tempEntries;
+      section.entries = extractSubtitles(section.entries);
     }
   });
 
