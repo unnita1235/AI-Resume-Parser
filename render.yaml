@@ -15,7 +15,7 @@ services:
       - key: PORT
         value: 5000
       - key: GOOGLE_GEMINI_API_KEY
-        value: AIzaSyAK8y6jxPRJAatJBDkSIYTOg0wfff-LneQ
+        sync: false  # Set via Render Dashboard secrets
       - key: MONGODB_URI
         sync: false  # Will default to empty -> Demo Mode
       - key: CORS_WHITELIST

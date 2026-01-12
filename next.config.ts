@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Turbopack configuration for faster builds
+  turbo: {
+    rules: {
+      '*.handlebars': ['handlebars-loader'],
+    },
+  },
   webpack: (config, { isServer }) => {
     // Suppress handlebars/dotprompt webpack warnings from Genkit
     config.ignoreWarnings = [
