@@ -1,6 +1,6 @@
 "use client";
 
-import { parseResume, ResumeSection } from "@/lib/resume-parser";
+import { parseResume } from "@/lib/resume-parser";
 import { Briefcase, GraduationCap, Star, User, FileText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
