@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { checkHealth, isConfigured } from '@/lib/geminiClient';
+import { checkHealth, isConfigured } from '@/lib/ai';
 
 export async function GET() {
   try {

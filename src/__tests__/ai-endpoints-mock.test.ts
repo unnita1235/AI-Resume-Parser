@@ -1,3 +1,4 @@
+import { describe, test, expect, afterEach, vi } from 'vitest';
 import * as gemini from '@/lib/geminiClient';
 import { POST as atsPOST } from '@/app/api/ai/ats-optimize/route';
 
@@ -15,7 +16,7 @@ describe('AI API with mocked Gemini', () => {
       strengths: ['Clear skills section'],
     };
 
-    (gemini.generateJSON as unknown as vi.Mock).mockResolvedValue({ success: true, data: mockData });
+    (gemini.generateJSON as any).mockResolvedValue({ success: true, data: mockData });
 
     const req = new Request('http://localhost/api/ai/ats-optimize', {
       method: 'POST',

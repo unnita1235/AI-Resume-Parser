@@ -119,7 +119,8 @@ export async function POST(request: NextRequest) {
  */
 async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   try {
-    const { default: pdf } = pdfParse;
+    // pdfParse is the default export in CommonJS
+    const pdf = pdfParse as any;
     const data = await pdf(buffer, {
       // Disable test data
       max: 0

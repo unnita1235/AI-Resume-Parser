@@ -1,0 +1,44 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+COPY backend/package.json backend/
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Build Next.js
+RUN npm run build
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+COPY backend/package.json backend/
+
+# Install production dependencies only
+RUN npm install --production && \
+    cd backend && npm install --production
+
+# Copy built Next.js app
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY src ./src
+COPY next.config.ts ./
+COPY tsconfig.json ./
+
+# Copy backend
+COPY backend/src ./backend/src
+COPY .env.production .env.local
+
+EXPOSE 3000 5000
+
+CMD ["node", "backend/src/server-v2.js"]
