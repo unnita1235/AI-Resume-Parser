@@ -1,7 +1,6 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -30,14 +29,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // ✅ ADD THIS SECTION (the fix):
-  env: {
-    NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV || 'development',
-  },
-  onDemandEntries: {
-    maxInactiveAge: 1000 * 60 * 60,
-    pagesBufferLength: 5,
-  },
+  // ✅ This disables Vercel monitoring in development
+  skipMiddlewareUrlNormalize: process.env.NODE_ENV === 'development',
+  swcMinify: true,
 };
 
 export default nextConfig;
