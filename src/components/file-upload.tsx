@@ -72,17 +72,23 @@ export function FileUpload({ onFileProcessed, disabled = false }: FileUploadProp
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('/api/extract-text', {
+    // Use backend URL if configured, otherwise use local Vercel endpoint
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+    const endpoint = apiUrl ? `${apiUrl}/api/parse` : '/api/extract-text';
+
+    const response = await fetch(endpoint, {
       method: 'POST',
       body: formData,
     });
 
     if (!response.ok) {
-      throw new Error('Failed to extract text');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to extract text');
     }
 
     const result = await response.json();
-    return result.text;
+    // Handle both backend response (/api/parse) and frontend response (/api/extract-text)
+    return result.text || result.raw_text || '';
   };
 
   const handleDragOver = (e: React.DragEvent) => {

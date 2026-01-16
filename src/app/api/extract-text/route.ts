@@ -16,12 +16,19 @@ import mammoth from 'mammoth';
  * @returns JSON with extracted text or error message
  */
 export async function POST(request: NextRequest) {
+  // Define CORS headers once at the top
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
     if (!file) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { 
           success: false,
           error: 'No file provided',
@@ -29,12 +36,14 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+      Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
+      return response;
     }
 
     // Validate file size (5MB limit)
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         {
           success: false,
           error: 'File too large',
@@ -42,6 +51,8 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+      Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
+      return response;
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -66,7 +77,7 @@ export async function POST(request: NextRequest) {
     ) {
       extractedText = await extractTextFromDOCX(buffer);
     } else {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { 
           success: false,
           error: 'Unsupported file type',
@@ -74,6 +85,8 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+      Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
+      return response;
     }
 
     // Clean up extracted text
@@ -85,7 +98,7 @@ export async function POST(request: NextRequest) {
 
     // Validate extraction result
     if (!extractedText || extractedText.trim().length < 10) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         {
           success: false,
           error: 'Extraction failed',
@@ -93,17 +106,21 @@ export async function POST(request: NextRequest) {
         },
         { status: 422 }
       );
+      Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
+      return response;
     }
 
-    return NextResponse.json({ 
+    const successResponse = NextResponse.json({ 
       success: true,
       text: extractedText,
       metadata
     });
+    Object.entries(corsHeaders).forEach(([key, value]) => successResponse.headers.set(key, value));
+    return successResponse;
 
   } catch (error) {
     console.error('Error extracting text:', error);
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       { 
         success: false,
         error: 'Extraction error',
@@ -111,6 +128,8 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 }
     );
+    Object.entries(corsHeaders).forEach(([key, value]) => errorResponse.headers.set(key, value));
+    return errorResponse;
   }
 }
 
