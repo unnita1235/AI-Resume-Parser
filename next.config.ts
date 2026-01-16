@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // ✅ ADD THIS SECTION (the fix):
+  env: {
+    NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV || 'development',
+  },
+  onDemandEntries: {
+    maxInactiveAge: 1000 * 60 * 60,
+    pagesBufferLength: 5,
+  },
 };
 
 export default nextConfig;
