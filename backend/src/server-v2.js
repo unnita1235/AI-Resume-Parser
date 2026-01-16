@@ -6,13 +6,14 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 
-// Import routes and middleware
+// Import routes, middleware, and utilities
 const authRoutes = require('./routes/auth');
 const resumeRoutes = require('./routes/resumes');
 const aiRoutes = require('./routes/ai');
 const adminRoutes = require('./routes/admin');
 const { authMiddleware, optionalAuth } = require('./middleware/auth');
-const rateLimitMiddleware = require('./middleware/rate-limiter');
+const { validateAtsRequest, validateToneRequest, validateActionVerbRequest } = require('./middleware/validate-request');
+const { connectDB } = require('./db/mongodb-connection');
 
 const app = express();
 
@@ -43,16 +44,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// MongoDB Connection
-if (process.env.NODE_ENV !== 'test' && process.env.MONGODB_URI) {
-  mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-    .then(() => console.log('✅ MongoDB Connected'))
-    .catch(err => console.error('❌ MongoDB Error:', err));
+// MongoDB Connection with retry logic
+if (process.env.NODE_ENV !== 'test') {
+  connectDB().catch(err => {
+    console.error('Failed to connect to MongoDB:', err.message);
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1); // Exit in production if DB connection fails
+    }
+    // Continue in development/test mode even if DB connection fails
+  });
 } else {
-  console.warn('⚠️  Skipping MongoDB connection (test mode or missing MONGODB_URI)');
+  console.log('⚠️  Skipping MongoDB connection (test mode)');
 }
 
 // Routes
@@ -77,10 +79,10 @@ app.post('/api/resumes', authMiddleware, resumeRoutes.create || ((_req, res) => 
 app.put('/api/resumes/:id', authMiddleware, resumeRoutes.update || ((_req, res) => res.status(404).json({ success: false })));
 app.delete('/api/resumes/:id', authMiddleware, resumeRoutes.delete || ((_req, res) => res.status(404).json({ success: false })));
 
-// AI routes
-app.post('/api/ai/ats-optimize', optionalAuth, aiRoutes.atsOptimize || ((_req, res) => res.status(404).json({ success: false })));
-app.post('/api/ai/tone-adjust', optionalAuth, aiRoutes.toneAdjust || ((_req, res) => res.status(404).json({ success: false })));
-app.post('/api/ai/action-verbs', optionalAuth, aiRoutes.actionVerbs || ((_req, res) => res.status(404).json({ success: false })));
+// AI routes with validation middleware
+app.post('/api/ai/ats-optimize', optionalAuth, validateAtsRequest, aiRoutes.atsOptimize || ((_req, res) => res.status(404).json({ success: false, error: 'Handler not found' })));
+app.post('/api/ai/tone-adjust', optionalAuth, validateToneRequest, aiRoutes.toneAdjust || ((_req, res) => res.status(404).json({ success: false, error: 'Handler not found' })));
+app.post('/api/ai/action-verbs', optionalAuth, validateActionVerbRequest, aiRoutes.actionVerbs || ((_req, res) => res.status(404).json({ success: false, error: 'Handler not found' })));
 
 // Admin routes (require admin role)
 app.get('/api/admin/users', authMiddleware, adminRoutes.listUsers || ((_req, res) => res.status(404).json({ success: false })));

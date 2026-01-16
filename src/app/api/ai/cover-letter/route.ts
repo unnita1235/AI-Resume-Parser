@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { generateJSON } from '@/lib/geminiClient';
+import { successResponse, errorResponse } from '@/lib/api-response';
 
 export async function POST(req: Request) {
   try {
@@ -7,15 +8,15 @@ export async function POST(req: Request) {
     const { resumeData, jobDescription, companyName } = body ?? {};
 
     if (!resumeData) {
-      return NextResponse.json({ success: false, error: 'resumeData is required' }, { status: 400 });
+      return NextResponse.json(errorResponse('resumeData is required'), { status: 400 });
     }
 
     if (!jobDescription || typeof jobDescription !== 'string') {
-      return NextResponse.json({ success: false, error: 'jobDescription is required and must be a string' }, { status: 400 });
+      return NextResponse.json(errorResponse('jobDescription is required and must be a string'), { status: 400 });
     }
 
     if (jobDescription.length < 20) {
-      return NextResponse.json({ success: false, error: 'Job description is too short. Please provide more details.' }, { status: 400 });
+      return NextResponse.json(errorResponse('Job description is too short (minimum 20 characters)'), { status: 400 });
     }
 
     const resumeStr = typeof resumeData === 'string' ? resumeData : `Name: ${resumeData.name || 'Candidate'}\nSkills: ${(resumeData.skills || []).join(', ')}\nExperience: ${(resumeData.experience || []).join('; ')}\nEducation: ${(resumeData.education || []).join('; ')}\nSummary: ${resumeData.summary || ''}`;
@@ -25,23 +26,20 @@ export async function POST(req: Request) {
     const result = await generateJSON(prompt, { temperature: 0.7, maxOutputTokens: 4096 });
 
     if (!result.success) {
-      return NextResponse.json({ success: false, error: result.error || 'Failed to generate cover letter' }, { status: 500 });
+      return NextResponse.json(errorResponse(result.error || 'Failed to generate cover letter'), { status: 500 });
     }
 
     const data = result.data ?? {};
 
-    const response = {
-      success: true,
-      coverLetter: data.coverLetter || '',
-      wordCount: typeof data.wordCount === 'number' ? data.wordCount : (data.coverLetter?.split(/\s+/).length || 0),
-    };
-
-    if (!response.coverLetter) {
-      return NextResponse.json({ success: false, error: 'Failed to generate cover letter content' }, { status: 500 });
+    if (!data.coverLetter) {
+      return NextResponse.json(errorResponse('Failed to generate cover letter content'), { status: 500 });
     }
 
-    return NextResponse.json(response);
+    return NextResponse.json(successResponse({
+      coverLetter: data.coverLetter,
+      wordCount: typeof data.wordCount === 'number' ? data.wordCount : (data.coverLetter?.split(/\s+/).length || 0),
+    }));
   } catch (error: any) {
-    return NextResponse.json({ success: false, error: error?.message ?? String(error) }, { status: 500 });
+    return NextResponse.json(errorResponse(error?.message ?? 'Failed to generate cover letter'), { status: 500 });
   }
 }

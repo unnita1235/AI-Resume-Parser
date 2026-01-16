@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { successResponse, errorResponse } from '@/lib/api-response';
 
 // PDF and DOCX extraction libraries
 // @ts-ignore - pdf-parse types not available
@@ -29,11 +30,7 @@ export async function POST(request: NextRequest) {
 
     if (!file) {
       const response = NextResponse.json(
-        { 
-          success: false,
-          error: 'No file provided',
-          message: 'Please upload a resume file (PDF, DOCX, or TXT)'
-        },
+        errorResponse('No file provided'),
         { status: 400 }
       );
       Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
@@ -44,11 +41,7 @@ export async function POST(request: NextRequest) {
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     if (file.size > MAX_FILE_SIZE) {
       const response = NextResponse.json(
-        {
-          success: false,
-          error: 'File too large',
-          message: 'Please upload a file smaller than 5MB'
-        },
+        errorResponse('File too large (max 5MB)'),
         { status: 400 }
       );
       Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
@@ -78,11 +71,7 @@ export async function POST(request: NextRequest) {
       extractedText = await extractTextFromDOCX(buffer);
     } else {
       const response = NextResponse.json(
-        { 
-          success: false,
-          error: 'Unsupported file type',
-          message: 'Please upload a PDF, DOCX, or TXT file'
-        },
+        errorResponse('Unsupported file type (use PDF, DOCX, or TXT)'),
         { status: 400 }
       );
       Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
@@ -99,37 +88,30 @@ export async function POST(request: NextRequest) {
     // Validate extraction result
     if (!extractedText || extractedText.trim().length < 10) {
       const response = NextResponse.json(
-        {
-          success: false,
-          error: 'Extraction failed',
-          message: 'Could not extract text from the file. Please ensure the file contains readable text.'
-        },
+        errorResponse('Could not extract text from file'),
         { status: 422 }
       );
       Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
       return response;
     }
 
-    const successResponse = NextResponse.json({ 
-      success: true,
-      text: extractedText,
-      metadata
-    });
-    Object.entries(corsHeaders).forEach(([key, value]) => successResponse.headers.set(key, value));
-    return successResponse;
+    const response = NextResponse.json(
+      successResponse({
+        text: extractedText,
+        metadata
+      })
+    );
+    Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
+    return response;
 
   } catch (error) {
     console.error('Error extracting text:', error);
-    const errorResponse = NextResponse.json(
-      { 
-        success: false,
-        error: 'Extraction error',
-        message: 'Failed to extract text from file. Please try again or use a different file format.'
-      },
+    const response = NextResponse.json(
+      errorResponse(error instanceof Error ? error.message : 'Failed to extract text'),
       { status: 500 }
     );
-    Object.entries(corsHeaders).forEach(([key, value]) => errorResponse.headers.set(key, value));
-    return errorResponse;
+    Object.entries(corsHeaders).forEach(([key, value]) => response.headers.set(key, value));
+    return response;
   }
 }
 
