@@ -10,13 +10,12 @@
 // ==================== CONFIGURATION ====================
 
 /**
- * Backend API URL - determined by environment variable or defaults
+ * Backend API URL
+ * In production, this should point to your Render backend.
+ * In development, it defaults to localhost.
  */
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-/**
- * Default timeout for API requests in milliseconds
- */
 const DEFAULT_TIMEOUT = 30000;
 
 // ==================== TYPE DEFINITIONS ====================
