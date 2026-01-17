@@ -1,24 +1,50 @@
-mport NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import { NextRequest, NextResponse } from 'next/server';
+import pdf from 'pdf-parse';
+import mammoth from 'mammoth';
 
-export const authOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-  ],
-  secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-    async session({ session, token }) {
-      session.user.id = token.sub;
-      return session;
-    },
-  },
-  pages: {
-    signIn: '/auth/signin',
-  },
-};
+// Force Node.js runtime because pdf-parse/mammoth need file system access
+export const runtime = 'nodejs';
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export async function POST(req: NextRequest) {
+  try {
+    const formData = await req.formData();
+    const file = formData.get('file') as File;
+
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    // Convert File to Buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    
+    let text = '';
+    const fileType = file.type;
+
+    if (fileType === 'application/pdf') {
+      const data = await pdf(buffer);
+      text = data.text;
+    } else if (
+      fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+      file.name.endsWith('.docx')
+    ) {
+      const result = await mammoth.extractRawText({ buffer });
+      text = result.value;
+    } else if (fileType === 'text/plain') {
+      text = buffer.toString('utf-8');
+    } else {
+      return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 });
+    }
+
+    // Basic cleanup
+    text = text.replace(/\s+/g, ' ').trim();
+
+    return NextResponse.json({ text });
+  } catch (error) {
+    console.error('Error extracting text:', error);
+    return NextResponse.json(
+      { error: 'Failed to extract text from file' },
+      { status: 500 }
+    );
+  }
+}
