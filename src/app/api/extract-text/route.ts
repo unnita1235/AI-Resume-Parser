@@ -30,13 +30,12 @@ export async function POST(req: NextRequest) {
     ) {
       const result = await mammoth.extractRawText({ buffer });
       text = result.value;
-    } else if (fileType === 'text/plain') {
-      text = buffer.toString('utf-8');
     } else {
-      return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 });
+      // Fallback for .txt or other text files
+      text = buffer.toString('utf-8');
     }
 
-    // Basic cleanup
+    // Cleanup: Remove excessive whitespace
     text = text.replace(/\s+/g, ' ').trim();
 
     return NextResponse.json({ text });
