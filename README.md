@@ -1,77 +1,40 @@
 # AI Resume Parser & Rewriter
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ai-resume-parser-seven.vercel.app/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-15-blue)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-84%25-blue)](https://www.typescriptlang.org/)
-[![Tailwind](https://img.shields.io/badge/Tailwind-3.4-06B6D4)](https://tailwindcss.com/)
 
-> AI-powered resume enhancement tool using Google Gemini for ATS optimization, professional tone adjustment, and action verb improvements
+> A prototype web tool using Google Gemini for basic resume parsing and enhancement to improve ATS compatibility, tone, and action verbs.
 
-**Live Demo:** https://ai-resume-parser-seven.vercel.app/  
-**Backend API:** https://ai-resume-parser-0cmr.onrender.com
+**Note:** The live demo (previously at https://ai-resume-parser-seven.vercel.app/) is currently unavailable as of January 2026. Local setup is required to test functionality. Backend API at https://ai-resume-parser-0cmr.onrender.com may be operational for testing.
 
 ---
 
-## 📸 Preview
-
-<p align="center">
-  <img src="screenshots/app-preview.png" alt="AI Resume Parser Interface" width="800">
-</p>
-
-
 ## Overview
 
-AI Resume Parser & Rewriter is a web application that helps job seekers optimize their resumes using artificial intelligence. Upload or paste your resume, and the AI provides intelligent enhancements for ATS compatibility, professional tone, and impactful language.
+This project is a basic prototype for a resume optimization tool. It allows users to upload or paste resume content, parse it into structured data (e.g., name, experience, skills), and apply AI enhancements via Google Gemini for ATS-friendly formatting, professional tone adjustments, and stronger action verbs. Built as a learning exercise, it demonstrates simple AI integration in a web app but remains limited to demo-level use without full production features like database storage or advanced error recovery.
 
 ---
 
 ## Key Features
 
-### Core Functionality
-- 🧠 **AI-powered enhancement** for ATS compatibility
-- 🎯 **Tone adjustment** for professional language
-- ⚡ **Action verb enhancement** for stronger impact
-- 📄 **Real-time preview** (input → AI-rewritten output)
-- 💾 **Download resume** in one click
-- 📋 **Copy to clipboard** functionality
+- **File Parsing:** Handles PDF, DOCX, and TXT uploads (up to 5MB) to extract structured data such as contact info, experience, education, and skills.
+- **AI Enhancement:** Uses Google Gemini 2.5 Flash to rewrite content for ATS optimization, professional language, and impactful verbs; processes in 1-3 seconds for typical resumes.
+- **User Interface:** Real-time preview of original vs. enhanced resume, with options to download or copy the output.
+- **Responsive Design:** Works on desktop and tablet; basic loading states and error messages for usability.
+- **Limitations:** No user accounts, version history, or advanced analytics; relies on server-side API keys; best with well-formatted input to avoid parsing issues.
 
-### File Management
-- 📤 **File upload** - PDF, DOCX, TXT support
-- 📝 **Text input** - Direct paste functionality
-- 🔄 **Reset function** - Return to template
-- 📊 **Character counter** - Track resume length
-
-### User Experience
-- 🎨 **Modern UI** with clean typography
-- 📱 **Fully responsive** - Desktop and tablet optimized
-- ⚡ **Loading states** - Visual feedback
-- 🎯 **Error handling** - Comprehensive error management
-- 🖨️ **Print optimization** - Clean print layout
+These features address real job search problems like passing ATS filters (which reject 75% of resumes due to formatting) and improving language, but the tool is not scalable for high-volume use.
 
 ---
 
 ## Tech Stack
 
-**Frontend**
-- Next.js 15 (App Router)
-- TypeScript
-- Tailwind CSS + shadcn/ui
-- Radix UI + Lucide Icons
-- React Hooks
-
-**AI Integration**
-- Google Genkit
-- Gemini 2.5 Flash
-
-**Backend**
-- Next.js API Routes
-- Node.js Express (separate backend)
-- File processing APIs
-
-**Deployment**
-- Frontend: Vercel
-- Backend: Render
+- **Frontend:** Next.js 15 (App Router for routing), TypeScript (for type safety), Tailwind CSS + shadcn/ui (for styling), Radix UI + Lucide Icons (for components), React Hooks (for state management).
+- **AI Integration:** Google Genkit (for Gemini API calls), Gemini 2.5 Flash model (for enhancements).
+- **Backend:** Next.js API Routes (for parsing and enhancement endpoints); no separate Express or Python backend in current structure.
+- **Deployment:** Vercel for frontend; Render for any API needs; Docker support via Dockerfile and docker-compose.yml.
+- **Tools:** GitHub Actions for CI/CD; basic testing implied but not detailed.
 
 ---
 
@@ -79,8 +42,8 @@ AI Resume Parser & Rewriter is a web application that helps job seekers optimize
 
 ### Prerequisites
 - Node.js v18+
-- npm or yarn
-- Google AI API Key ([Get free key](https://aistudio.google.com/app/apikey))
+- npm
+- Google AI API Key (free from https://aistudio.google.com/app/apikey)
 
 ### Installation
 
@@ -94,265 +57,78 @@ npm install
 
 # Set up environment
 cp .env.example .env.local
-# Add your Google AI API key:
-# GOOGLE_AI_API_KEY=your_api_key_here
+# Add GOOGLE_AI_API_KEY=your_key_here
 
 # Run development server
 npm run dev
-```
+Access at http://localhost:3000. Upload a resume to test parsing and enhancement.
 
-Open http://localhost:3000
-
----
-
-## Project Structure
-
-```
-AI-Resume-Parser/
-├── src/
-│   ├── app/
+Project Structure
+textAI-Resume-Parser/
+├── .github/workflows/        # CI/CD workflows
+├── .vscode/                  # VS Code settings
+├── public/screenshots/       # Screenshots
+├── src/                      # Frontend source
+│   ├── app/                  # Next.js app router
 │   │   ├── page.tsx          # Main page
 │   │   ├── layout.tsx        # Root layout
-│   │   ├── api/              # API routes
-│   │   │   ├── parse/        # Resume parsing
-│   │   │   └── enhance/      # AI enhancement
+│   │   ├── api/              # API routes (parse, enhance)
 │   │   └── globals.css
-│   ├── components/
-│   │   ├── ResumeEditor.tsx  # Main editor
-│   │   ├── FileUpload.tsx    # Upload handler
-│   │   ├── PreviewPane.tsx   # Resume preview
-│   │   └── ui/               # shadcn/ui
-│   ├── lib/
+│   ├── components/           # UI components
+│   │   ├── ResumeEditor.tsx
+│   │   ├── FileUpload.tsx
+│   │   ├── PreviewPane.tsx
+│   │   └── ui/               # shadcn/ui components
+│   ├── lib/                  # Utilities
 │   │   ├── ai.ts             # AI integration
 │   │   ├── parser.ts         # Parsing logic
 │   │   └── utils.ts
-│   └── types/
+│   └── types/                # TypeScript types
 │       └── resume.ts
-├── backend/                   # Express API (optional)
-│   ├── app.py
-│   └── requirements.txt
 ├── .env.example
-└── README.md
-```
+├── .gitignore
+├── API_REFERENCE.md
+├── ARCHITECTURE.md
+├── DEPLOYMENT.md
+├── Dockerfile
+├── LICENSE
+├── QUICK_SETUP.md
+├── README.md
+├── docker-compose.yml
+├── next.config.ts
+├── package.json
+├── tailwind.config.ts
+├── tsconfig.json
 
----
+How It Works
 
-## Environment Variables
+Input Handling: User uploads file or pastes text; parsed into structured JSON (e.g., {"name": "John Doe", "skills": [...]}) via API route.
+AI Processing: Sends parsed data to Gemini for optimization using predefined prompts for ATS keywords, tone, and verbs.
+Output: Displays enhanced resume in preview pane; allows export.
+Problem Solving: Helps with real issues like weak verbs (e.g., "helped" to "spearheaded") and ATS rejection, but processing depends on input quality and API availability.
 
-```env
-# .env.local
 
-# Google AI API Key
-GOOGLE_AI_API_KEY=your_google_ai_api_key_here
+Development Scripts
+Bashnpm run dev     # Local server
+npm run build   # Production build
+npm run start   # Run build
+npm run lint    # Code linting
 
-# Next.js Config
-NEXT_PUBLIC_API_URL=http://localhost:3000
+Known Limitations
 
-# Development
-NODE_ENV=development
-```
+Requires Google AI API key; free tier may have rate limits.
+Parsing accuracy varies with file format; complex layouts may fail.
+No persistent storage; all processing is session-based.
+Demo site down; local run needed for testing.
+Basic security; not audited for production.
 
-**Getting Your API Key:**
-1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Sign in with Google account
-3. Click "Get API Key"
-4. Create new API key
-5. Copy and paste into `.env.local`
 
----
+Contributing
+Fork, create branch, commit, push, and PR. Focus on bug fixes or feature additions.
 
-## API Endpoints (Backend)
+License
+MIT - See LICENSE
 
-### Resume Parsing
-**POST** `/api/parse`
-- Upload and parse resume files
-- Supports: PDF, DOCX, TXT
-- Max size: 5MB
-
-**Request:**
-```bash
-curl -X POST http://localhost:5000/api/parse \
-  -F "file=@resume.pdf"
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "name": "John Doe",
-    "email": "john@example.com",
-    "experience": [...],
-    "education": [...],
-    "skills": [...]
-  }
-}
-```
-
-### AI Enhancement
-**POST** `/api/enhance`
-- AI-powered resume rewriting
-- Tone adjustment
-- Action verb optimization
-
----
-
-## How It Works
-
-### AI Enhancement Process
-
-1. **Input:** User uploads resume or pastes text
-2. **Parsing:** Extract structured data from resume
-3. **AI Analysis:** Send to Google Gemini for enhancement
-4. **Optimization:** 
-   - ATS keyword optimization
-   - Professional tone adjustment
-   - Action verb strengthening
-5. **Output:** Display enhanced resume with improvements
-6. **Export:** Download or copy optimized version
-
-### Supported Enhancements
-
-- **ATS Optimization:** Keyword placement, formatting
-- **Tone Adjustment:** Professional language, clarity
-- **Action Verbs:** Stronger, more impactful verbs
-- **Structure:** Improved organization and flow
-
----
-
-## Features Status
-
-✅ **Currently Working:**
-- Resume file upload (PDF, DOCX, TXT)
-- Text paste functionality
-- AI-powered enhancement
-- Real-time preview
-- Download functionality
-- Copy to clipboard
-- Responsive design
-
-🚧 **In Progress:**
-- User accounts
-- Resume templates
-- Version history
-- Advanced analytics
-
-📅 **Planned:**
-- Resume scoring system
-- Job-specific optimization
-- Cover letter generation
-- LinkedIn profile optimization
-- Multi-language support
-
----
-
-## Development Scripts
-
-```bash
-npm run dev          # Start dev server
-npm run build        # Build for production
-npm run start        # Run production build
-npm run lint         # Lint code
-npm run typecheck    # TypeScript check
-```
-
----
-
-## Deployment
-
-### Vercel (Frontend)
-
-1. Push to GitHub
-2. Import repository in Vercel
-3. Add environment variables:
-   - `GOOGLE_AI_API_KEY`
-4. Deploy automatically
-
-### Render (Backend - Optional)
-
-1. Create web service
-2. Connect GitHub repository
-3. Set environment variables
-4. Deploy
-
----
-
-## Performance
-
-**Current Metrics:**
-- Processing time: <2s per resume
-- Supported formats: PDF, DOCX, TXT
-- Max file size: 5MB
-- AI response time: 1-3s
-
----
-
-## Security
-
-- API keys stored server-side only
-- Input validation and sanitization
-- Type-safe with TypeScript
-- Secure file upload handling
-- HTTPS enforced in production
-
----
-
-## Known Limitations
-
-- AI enhancement requires Google AI API key (free tier available)
-- Processing time depends on resume length
-- Best results with well-formatted input
-- Demo uses placeholder data when API unavailable
-
----
-
-## Future Enhancements
-
-- Resume ATS score (percentage ranking)
-- Multiple resume templates
-- Job description keyword matching
-- Cover letter generation
-- Interview preparation tips
-- Export to multiple formats (DOCX, PDF)
-
----
-
-## Contributing
-
-Contributions welcome! Please:
-1. Fork the repository
-2. Create feature branch
-3. Commit changes
-4. Push to fork
-5. Open Pull Request
-
----
-
-## License
-
-MIT License - See [LICENSE](LICENSE)
-
----
-
-## Author
-
-**Unni T A**
-- GitHub: [@unnita1235](https://github.com/unnita1235)
-- Email: unnita1235@gmail.com
-- Portfolio: https://github.com/unnita1235
-
----
-
-## Acknowledgments
-
-- Next.js team
-- Google Genkit
-- Vercel
-- shadcn/ui
-- Tailwind CSS
-
----
-
-**AI Resume Parser & Rewriter** - Helping Job Seekers Land Their Dream Jobs
-
-*Note: This project demonstrates AI integration with Google Gemini for practical resume enhancement. The current deployment showcases full functionality with AI-powered optimization.*
+Author
+Unni T A (@unnita1235) - Entry-level full-stack developer focusing on AI web tools.
+Updated: January 2026
